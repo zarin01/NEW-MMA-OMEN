@@ -11,8 +11,11 @@ router.get('', async (req, res) => {
             description: "Website Description"
         }
 
-        const data = await Post.find();
+        let slug = req.params.id;
+        const data = await Post.findById({_id: slug});
+
         res.render('index', {locals, data});
+        
     } catch (error){
         console.log(error);
     }
