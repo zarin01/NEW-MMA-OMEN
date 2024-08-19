@@ -10,6 +10,9 @@ const PORT = 5000 || process.env.PORT;
  
 connectDB();
 
+app.use(express.urlencoded({ extended: true }));
+app.use(express.json());
+
 app.use(express.static('public'));
 
 
@@ -20,6 +23,7 @@ app.set('view engine', 'ejs');
 
 
 app.use('/', require('./Server/Routes/main'));
+app.use('/', require('./Server/Routes/admin'));
 
 
 
