@@ -27,7 +27,8 @@ router.get('', async (req, res) => {
         locals,
         data,
         current: page,
-        nextPage: hasNextPage ? nextPage : null
+        nextPage: hasNextPage ? nextPage : null,
+        currentRoute: '/'
     });
     } catch (error){
         console.log(error);
@@ -47,7 +48,8 @@ router.get('/post/:id', async (req, res) => {
 
     const locals ={
             title: data.title,
-            description: "Website Description"
+            description: "Website Description",
+            currentRoute: `/post/${slug}`
         }
 
     res.render('post', {
@@ -63,31 +65,52 @@ router.get('/post/:id', async (req, res) => {
 
 
 
-//Post Search
-router.post('/search', async (req, res) => {   
-    try{
-
-    const locals ={
-            title: 'Search',
-            description: "Website Description"
+/**
+ * POST /
+ * Post - searchTerm
+*/
+router.post('/search', async (req, res) => {
+    try {
+      const locals = {
+        title: "Seach",
+        description: "Simple Blog created with NodeJs, Express & MongoDb."
+      }
+  
+      let searchTerm = req.body.searchTerm;
+      const searchNoSpecialChar = searchTerm.replace(/[^a-zA-Z0-9 ]/g, "")
+  
+      const data = await Post.find({
+        $or: [
+          { title: { $regex: new RegExp(searchNoSpecialChar, 'i') }},
+          { body: { $regex: new RegExp(searchNoSpecialChar, 'i') }}
+        ]
+      });
+  
+      res.render("search", {
+        data,
+        locals,
+        currentRoute: '/'
+      });
+  
+    } catch (error) {
+      console.log(error);
     }
+  
+  });
+  
+  
+  /**
+   * GET /
+   * About
+  */
+  router.get('/about', (req, res) => {
+    res.render('about', {
+      currentRoute: '/about'
+    });
+  });
+  
+  
 
-    let searchTerm = req.body.searchTerm;
-
-    console.log(searchTerm);
-
-    res.send(searchTerm);
-    } catch (error){
-        console.log(error);
-    }
-
-});
-
-
-
-router.get('/about', (req, res) => {         
-    res.render('about');
-});
 
 
 module.exports = router;

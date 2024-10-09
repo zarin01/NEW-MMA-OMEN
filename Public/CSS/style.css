@@ -305,12 +305,14 @@ img {
   position: absolute;
   left: 0;
   right: 0;
+  display: none;
 }
 
 
 .searchBar.open {
   transform: translateY(0);
   transition: transform 0.1s;
+  display: block;
 }
 
 .searchBar input {
