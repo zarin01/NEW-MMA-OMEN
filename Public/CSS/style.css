@@ -298,21 +298,19 @@ img {
 
 /* SeachBar */
 .searchBar {
- /* visibility: hidden;
-  transform: translateY(-100px); */
+  visibility: hidden;
+  transform: translateY(-100px);
   background-color: var(--black);
   padding: 4px 0;
   position: absolute;
   left: 0;
   right: 0;
-  display: none;
 }
 
 
 .searchBar.open {
   transform: translateY(0);
   transition: transform 0.1s;
-  display: block;
 }
 
 .searchBar input {
@@ -340,4 +338,3 @@ img {
 .pagination:hover {
   color: var(--black);
 }
-

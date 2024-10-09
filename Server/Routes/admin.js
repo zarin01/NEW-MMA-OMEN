@@ -11,48 +11,52 @@ const jwtSecret = process.env.JWT_SECRET;
 
 /**
  * 
- * Check Login
+ * Check Login middleware
 */
-const authMiddleware = (req, res, next ) => {
+const authMiddleware = (req, res, next) => {
   const token = req.cookies.token;
 
-  if(!token) {
-    return res.status(401).json( { message: 'Unauthorized'} );
+  if (!token) {
+    return res.redirect('/'); 
   }
 
   try {
     const decoded = jwt.verify(token, jwtSecret);
-    req.userId = decoded.userId;
+    req.userId = decoded.userId; 
     next();
-  } catch(error) {
-    res.status(401).json( { message: 'Unauthorized'} );
+  } catch (error) {
+    return res.redirect('/');
   }
-}
+};
+
 
 
 /**
  * GET /
- * Admin - Login Page
+ * Admin - Login Page middleware
 */
-router.get('/admin', async (req, res) => {
-  try {
-    const locals = {
-      title: "Admin",
-      description: "Simple Blog created with NodeJs, Express & MongoDb."
-    }
+router.get('/log-in', (req, res) => {
+  const token = req.cookies.token;
 
-    res.render('admin/index', { locals, layout: adminLayout });
-  } catch (error) {
-    console.log(error);
+  if (token) {
+    return res.redirect('/dashboard');
   }
+
+  const locals = {
+    title: "Admin",
+    description: "Simple Blog created with NodeJs, Express & MongoDb."
+  };
+
+  res.render('admin/index', { locals, layout: adminLayout });
 });
+
 
 
 /**
  * POST /
  * Admin - Check Login
 */
-router.post('/admin', async (req, res) => {
+router.post('/log-in', async (req, res) => {
   try {
     const { username, password } = req.body;
     
