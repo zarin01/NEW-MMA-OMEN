@@ -1,44 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add New Post</title>
+    <script src="https://cdn.tiny.cloud/1/5zm60qesc6jws996dbi74dh260hjywix02k6ofi6mpgmm85d/tinymce/6/tinymce.min.js" referrerpolicy="origin"></script>
+</head>
+<body>
 <a href="/dashboard">&larr; Back</a>
 <div class="admin-title">
-  <h2>Add New Post</h2>
+    <h2>Add New Post</h2>
 </div>
 
-<form action="/add-post" method="POST" enctype="multipart/form-data"> <!-- Added enctype for file uploads -->
+<form action="/add-post" method="POST" enctype="multipart/form-data">
+    <label for="title"><b>Title</b></label>
+    <input type="text" placeholder="Post Title" name="title" required>
 
-  <label for="title"><b>Title</b></label>
-  <input type="text" placeholder="Post Title" name="title" required>
+    <label for="author"><b>Author</b></label>
+    <input type="text" placeholder="Author Name" name="author" required>
 
-  <label for="author"><b>Author</b></label>
-  <input type="text" placeholder="Author Name" name="author" required>
+    <label for="headerImage"><b>Header Image</b></label>
+    <input type="file" name="headerImage" required>
 
-  <label for="headerImage"><b>Header Image</b></label>
-  <input type="file" name="headerImage" required>
+    <label for="body"><b>Content</b></label>
+    <textarea name="body" required></textarea> <!-- TinyMCE will replace this -->
 
-  <label for="body"><b>Content</b></label>
-  <textarea name="body" cols="50" rows="10" required></textarea>
+    <label for="categories"><b>Categories</b></label>
+    <p><b>Choose Promotions:</b></p>
+    <div>
+        <label><input type="checkbox" name="categories" value="UFC" /> UFC</label>
+        <label><input type="checkbox" name="categories" value="Bellator" /> Bellator</label>
+        <label><input type="checkbox" name="categories" value="ONE Championship" /> ONE Championship</label>
+        <label><input type="checkbox" name="categories" value="PFL" /> PFL</label>
+    </div>
 
-  <label for="categories"><b>Categories</b></label>
+    <p><b>Choose Combat Sports:</b></p>
+    <div>
+        <label><input type="checkbox" name="categories" value="MMA" /> MMA</label>
+        <label><input type="checkbox" name="categories" value="Boxing" /> Boxing</label>
+        <label><input type="checkbox" name="categories" value="Kickboxing" /> Kickboxing</label>
+        <label><input type="checkbox" name="categories" value="Muay Thai" /> Muay Thai</label>
+        <label><input type="checkbox" name="categories" value="Wrestling" /> Wrestling</label>
+        <label><input type="checkbox" name="categories" value="Jiu-Jitsu" /> Jiu-Jitsu</label>
+    </div>
 
-  <!-- Promotions (checkbox group) -->
-  <p><b>Choose Promotions:</b></p>
-  <div>
-    <label><input type="checkbox" name="categories" value="UFC" /> UFC</label>
-    <label><input type="checkbox" name="categories" value="Bellator" /> Bellator</label>
-    <label><input type="checkbox" name="categories" value="ONE Championship" /> ONE Championship</label>
-    <label><input type="checkbox" name="categories" value="PFL" /> PFL</label>
-  </div>
-
-  <!-- Combat Sports (checkbox group) -->
-  <p><b>Choose Combat Sports:</b></p>
-  <div>
-    <label><input type="checkbox" name="categories" value="MMA" /> MMA</label>
-    <label><input type="checkbox" name="categories" value="Boxing" /> Boxing</label>
-    <label><input type="checkbox" name="categories" value="Kickboxing" /> Kickboxing</label>
-    <label><input type="checkbox" name="categories" value="Muay Thai" /> Muay Thai</label>
-    <label><input type="checkbox" name="categories" value="Wrestling" /> Wrestling</label>
-    <label><input type="checkbox" name="categories" value="Jiu-Jitsu" /> Jiu-Jitsu</label>
-  </div>
-
-  <input type="submit" value="Add" class="btn">
-
+    <input type="submit" value="Add" class="btn">
 </form>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        tinymce.init({
+            selector: 'textarea', // Target the textarea for TinyMCE
+            plugins: 'image link lists table code', // Add the plugins you want
+            toolbar: 'undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | outdent indent | link image | code',
+            menubar: false,
+            height: 300, // Adjust the editor height
+        });
+    });
+</script>
+</body>
+</html>
