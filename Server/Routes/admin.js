@@ -94,31 +94,14 @@ router.get('/add-post', authMiddleware, async (req, res) => {
 
 
 
+
+
+
+
 /**
  * Admin - Handle Image Upload
  * Using Multer
  */
-const storage = multer.diskStorage({
-    destination: (req, file, cb) => {
-      cb(null, 'uploads/');
-    },
-    filename: (req, file, cb) => {
-      cb(null, Date.now() + path.extname(file.originalname));
-    }
-});
-
-// Filter for image files
-const fileFilter = (req, file, cb) => {
-  const filetypes = /jpeg|jpg|png/;
-  const extname = filetypes.test(path.extname(file.originalname).toLowerCase());
-  const mimetype = filetypes.test(file.mimetype);
-  if (mimetype && extname) {
-    return cb(null, true);
-  } else {
-    cb('Error: Images Only!');
-  }
-};
-  
   
 // Configure AWS SDK
 const s3 = new S3Client({
@@ -129,56 +112,25 @@ const s3 = new S3Client({
   },
 });
 
-  
-
 const upload = multer({
   storage: multerS3({
-    s3: s3, // The S3 client with the region specified
-    bucket: 'your-s3-bucket-name',
-    acl: 'public-read', // Set file permissions (optional)
-    contentType: multerS3.AUTO_CONTENT_TYPE, // Automatically detect content type
+    s3: s3,
+    bucket: 'mma-omen-image-upload',
+    acl: 'public-read',
+    contentType: multerS3.AUTO_CONTENT_TYPE,
     key: function (req, file, cb) {
-      cb(null, Date.now().toString() + '-' + file.originalname); // Unique filename
+      cb(null, Date.now().toString() + '-' + file.originalname);
     }
   }),
-  limits: { fileSize: 1024 * 1024 * 5 }, // 5MB file size limit
+  limits: { fileSize: 1024 * 1024 * 5 },
   fileFilter: (req, file, cb) => {
-    if (file.mimetype === 'image/jpeg' || file.mimetype === 'image/png') {
+    if (file.mimetype === 'image/jpeg' || file.mimetype === 'image/png' || file.mimetype === 'image/webp') {
       cb(null, true);
     } else {
       cb(new Error('Only .png, .jpg, and .jpeg format allowed!'), false);
     }
   },
 });
-  
-/**
- * Admin - Create New Post
- * POST /add-post
- */
-
-router.post('/add-post', upload.single('headerImage'), async (req, res) => {
-  try {
-    const { title, body, author, categories } = req.body;
-    const headerImage = req.file ? req.file.location : null; // S3 file URL
-
-    const newPost = new Post({
-      title,
-      body,
-      author,
-      categories: categories.split(',').map(cat => cat.trim()), // Convert categories
-      headerImage, // Save image URL to the database
-      createdAt: new Date(),
-      updatedAt: new Date(),
-    });
-
-    await newPost.save(); // Save post to database
-    res.redirect('/dashboard'); // Redirect after successful creation
-  } catch (error) {
-    console.error(error);
-    res.status(500).send('Server Error');
-  }
-});
-
 
 // Middleware to handle multer errors
 app.use((err, req, res, next) => {
@@ -188,6 +140,48 @@ app.use((err, req, res, next) => {
     res.status(500).send('Server error');
   }
 });
+
+
+
+
+
+
+/**
+ * Admin - Create New Post
+ * POST /add-post
+ */
+
+router.post('/add-post', upload.single('headerImage'), async (req, res) => {
+  try {
+    const { title, body, author, categories } = req.body;
+    const headerImage = req.file ? req.file.location : null;
+
+    // Convert selected categories (checkboxes) into a comma-separated string
+    const categoriesArray = Array.isArray(categories) ? categories : [categories]; // Ensure it's an array
+    const categoriesString = categoriesArray.join(', '); // Join categories into a single string
+
+    const newPost = new Post({
+      title,
+      body,
+      author,
+      categories: categoriesString, // Save categories as a comma-separated string
+      headerImage,
+      createdAt: new Date(),
+      updatedAt: new Date(),
+    });
+
+    await newPost.save();
+    res.redirect('/dashboard');
+  } catch (error) {
+    console.error(error);
+    res.status(500).send('Server Error');
+  }
+});
+
+
+
+
+
 
 
 /**
@@ -201,36 +195,60 @@ router.get('/edit-post/:id', authMiddleware, async (req, res) => {
       description: 'Simple Blog created with NodeJs, Express & MongoDb.'
     };
 
+    // Fetch the post by its ID
     const data = await Post.findOne({ _id: req.params.id });
 
+    // Render the edit form with existing post data
     res.render('admin/edit-post', {
       locals,
       data,
       layout: adminLayout
     });
-
   } catch (error) {
-    console.log(error);
+    console.error(error);
+    res.status(500).send('Server Error');
   }
 });
+
 
 /**
  * Admin - Update Post
  * PUT /edit-post/:id
  */
-router.put('/edit-post/:id', authMiddleware, async (req, res) => {
+router.put('/edit-post/:id', authMiddleware, upload.single('headerImage'), async (req, res) => {
   try {
-    await Post.findByIdAndUpdate(req.params.id, {
-      title: req.body.title,
-      body: req.body.body,
-      updatedAt: Date.now()
-    });
+    const { title, body, categories } = req.body;
 
-    res.redirect(`/edit-post/${req.params.id}`);
+    // Combine categories from checkboxes into a comma-separated string
+    const categoriesArray = Array.isArray(categories) ? categories : [categories]; // Ensure it's an array
+    const categoriesString = categoriesArray.join(', '); // Join categories into a single string
+
+    const headerImage = req.file ? req.file.location : null;
+
+    const updateData = {
+      title,
+      body,
+      categories: categoriesString, // Save categories as a comma-separated string
+      updatedAt: Date.now(),
+    };
+
+    // If a new image was uploaded, update the image field
+    if (headerImage) {
+      updateData.headerImage = headerImage;
+    }
+
+    // Update the post in the database
+    await Post.findByIdAndUpdate(req.params.id, updateData);
+
+    // Redirect back to the post editing page with success message
+    res.redirect(`/edit-post/${req.params.id}?success=true`);
   } catch (error) {
-    console.log(error);
+    console.error(error);
+    res.status(500).send('Server Error');
   }
 });
+
+
 
 /**
  * Admin - Delete Post

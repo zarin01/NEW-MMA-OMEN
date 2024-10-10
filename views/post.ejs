@@ -1,2 +1,18 @@
 <h1><%= data.title %></h1>
-<article class="article"><%= data.body %></article>
+
+<div class="post-meta">
+  <p><b>Author:</b> <%= data.author %></p>
+  <p><b>Date Uploaded:</b> <%= new Date(data.createdAt).toLocaleDateString() %></p>
+  <p><b>Categories:</b> <%= data.categories.join(', ') %></p> <!-- Display categories as comma-separated list -->
+</div>
+
+<!-- Full-width header image -->
+<div class="post-image" style="width: 100%; text-align: center; margin: 20px 0;">
+  <% if (data.headerImage) { %>
+    <img src="<%= data.headerImage %>" alt="Header Image" style="width: 100%; max-width: 1200px; height: auto;" />
+  <% } %>
+</div>
+
+<article class="article">
+  <p><%= data.body %></p>
+</article>
