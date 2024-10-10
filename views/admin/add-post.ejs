@@ -3,13 +3,22 @@
   <h2>Add New Post</h2>
 </div>
 
-<form action="/add-post" method="POST">
+<form action="/add-post" method="POST" enctype="multipart/form-data"> <!-- Added enctype for file uploads -->
 
   <label for="title"><b>Title</b></label>
-  <input type="text" placeholder="Post Title" name="title">
+  <input type="text" placeholder="Post Title" name="title" required>
+
+  <label for="author"><b>Author</b></label>
+  <input type="text" placeholder="Author Name" name="author" required>
+
+  <label for="categories"><b>Categories</b></label>
+  <input type="text" placeholder="Categories (comma-separated)" name="categories">
+
+  <label for="headerImage"><b>Header Image</b></label>
+  <input type="file" name="headerImage" required>
 
   <label for="body"><b>Content</b></label>
-  <textarea name="body" cols="50" rows="10"></textarea>
+  <textarea name="body" cols="50" rows="10" required></textarea>
 
   <input type="submit" value="Add" class="btn">
 
