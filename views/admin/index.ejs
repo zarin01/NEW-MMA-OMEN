@@ -1,13 +1,25 @@
-<h3>Sign In</h3>
-<a href="/register" class="<%= isActiveRoute('/register', currentRoute) %>">No Account? Register Here</a>
-<form action="/log-in" method="POST">
+<% if (isLoggedIn) { %>
+  <!-- Show logged-in (admin) header -->
+  <header>
+    <h1>Welcome back, User!</h1>
+    <nav>
+      <ul>
+        <li><a href="/logout">Logout</a></li>
+      </ul>
+    </nav>
+  </header>
+<% } else { %>
 
-  <label for="username"><b>Username</b></label>
-  <input type="text" placeholder="Enter Username" name="username">
+  <!-- Login form -->
+  <h3>Sign In</h3>
+  <a href="/register" class="<%= isActiveRoute('/register', currentRoute) %>">No Account? Register Here</a>
+  <form action="/log-in" method="POST">
+    <label for="username"><b>Username</b></label>
+    <input type="text" placeholder="Enter Username" name="username">
 
-  <label for="password"><b>Password</b></label>
-  <input type="password" placeholder="Enter Password" name="password">
+    <label for="password"><b>Password</b></label>
+    <input type="password" placeholder="Enter Password" name="password">
 
-  <input type="submit" value="Login" class="btn">
-
-</form>
+    <input type="submit" value="Login" class="btn">
+  </form>
+<% } %>

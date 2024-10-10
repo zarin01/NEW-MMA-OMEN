@@ -10,30 +10,37 @@ const adminLayout = '../views/layouts/admin';
 const mainLayout = '../views/layouts/main';
 
 
-
 /**
- * 
  * Check Login middleware
-*/
-const authMiddleware = (req, res, next) => {
+ */
+
+const authMiddleware = async (req, res, next) => {
   const token = req.cookies.token;
 
   if (!token) {
-    req.isAdmin = false;
+    req.isLoggedIn = false; // User is not logged in
     return next();
   }
 
   try {
     const decoded = jwt.verify(token, jwtSecret);
     req.userId = decoded.userId;
-    req.isAdmin = true;
-    res.render('admin/index', { locals, layout: adminLayout });
-    next();
+
+    // Fetch user from the database
+    const user = await User.findById(req.userId);
+
+    // If the user exists, they are logged in
+    req.isLoggedIn = !!user;
+
+    next(); // Proceed to the next middleware or route handler
   } catch (error) {
-    req.isAdmin = false;
+    req.isLoggedIn = false; // If there's an error (invalid token, etc.), consider the user not logged in
     next();
   }
 };
+
+
+
 
 /**
  * GET /
@@ -49,7 +56,7 @@ router.get('', authMiddleware, async (req, res) => {
     let perPage = 10;
     let page = req.query.page || 1;
 
-    const data = await Post.aggregate([ { $sort: { createdAt: -1 } } ])
+    const data = await Post.aggregate([{ $sort: { createdAt: -1 } }])
       .skip(perPage * page - perPage)
       .limit(perPage)
       .exec();
@@ -58,16 +65,18 @@ router.get('', authMiddleware, async (req, res) => {
     const nextPage = parseInt(page) + 1;
     const hasNextPage = nextPage <= Math.ceil(count / perPage);
 
+    // Set layout based on whether the user is logged in or not
+    const PageLayout = req.isLoggedIn ? adminLayout : mainLayout;
 
-    const PageLayout = req.isAdmin ? adminLayout : mainLayout;
-
+    // Render the index page with the locals and data
     res.render('index', { 
       locals,
       data,
       current: page,
       nextPage: hasNextPage ? nextPage : null,
       currentRoute: '/',
-      layout: PageLayout
+      layout: PageLayout,
+      isLoggedIn: req.isLoggedIn
     });
 
   } catch (error) {
@@ -76,15 +85,30 @@ router.get('', authMiddleware, async (req, res) => {
 });
 
 
+
 /**
  * GET /
  * Admin - Login Page middleware
 */
-router.get('/log-in', (req, res) => {
+router.get('/log-in', authMiddleware, async (req, res) => {
   const token = req.cookies.token;
 
   if (token) {
-    return res.redirect('/dashboard');
+    try {
+      const decoded = jwt.verify(token, jwtSecret);
+      req.userId = decoded.userId;
+
+      const user = await User.findById(req.userId);
+
+      if (user && user.role === 'admin') {
+        return res.redirect('/dashboard');
+      } else {
+        return res.redirect('/profile');
+      }
+    } catch (error) {
+      console.log(error);
+      return res.redirect('/log-in');
+    }
   }
 
   const locals = {
@@ -92,8 +116,9 @@ router.get('/log-in', (req, res) => {
     description: "Simple Blog created with NodeJs, Express & MongoDb."
   };
 
-  res.render('admin/index', { locals, currentRoute: '/log-in' });
+  res.render('admin/index', { locals, currentRoute: '/log-in', isLoggedIn: req.isLoggedIn });
 });
+
 
 
 
@@ -147,7 +172,8 @@ router.get('/post/:id', async (req, res) => {
     res.render('post', { 
       locals,
       data,
-      currentRoute: `/post/${slug}`
+      currentRoute: `/post/${slug}`,
+      isLoggedIn: req.isLoggedIn
     });
   } catch (error) {
     console.log(error);
@@ -180,7 +206,8 @@ router.post('/search', async (req, res) => {
     res.render("search", {
       data,
       locals,
-      currentRoute: '/'
+      currentRoute: '/',
+      isLoggedIn: req.isLoggedIn
     });
 
   } catch (error) {
@@ -196,7 +223,8 @@ router.post('/search', async (req, res) => {
 */
 router.get('/about', (req, res) => {
   res.render('about', {
-    currentRoute: '/about'
+    currentRoute: '/about',
+    isLoggedIn: req.isLoggedIn
   });
 });
 
@@ -212,7 +240,7 @@ router.get('/register', (req, res) => {
     description: "Create an account."
   };
 
-  res.render('register', { locals, currentRoute: '/register' });
+  res.render('register', { locals, currentRoute: '/register', isLoggedIn: req.isLoggedIn });
 });
 
 /**
@@ -240,7 +268,8 @@ router.post('/register', async (req, res) => {
             description: "Create an account.", 
             errorMessage: 'Username already in use' 
           }, 
-          currentRoute: '/register' 
+          currentRoute: '/register' ,
+          isLoggedIn: req.isLoggedIn
         });
       }
       // Other internal errors
@@ -250,7 +279,8 @@ router.post('/register', async (req, res) => {
           description: "Create an account.", 
           errorMessage: 'Internal server error. Please try again later.' 
         }, 
-        currentRoute: '/register' 
+        currentRoute: '/register',
+        isLoggedIn: req.isLoggedIn
       });
     }
 
@@ -262,7 +292,8 @@ router.post('/register', async (req, res) => {
         description: "Create an account.", 
         errorMessage: 'Internal server error. Please try again later.' 
       }, 
-      currentRoute: '/register' 
+      currentRoute: '/register',
+      isLoggedIn: req.isLoggedIn
     });
   }
 });
