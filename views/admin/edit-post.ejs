@@ -7,19 +7,22 @@
   </form>
 </div>
 
-<form action="/edit-post/<%= data._id %>?_method=PUT" method="POST" enctype="multipart/form-data"> <!-- Added enctype for file uploads -->
+<form action="/edit-post/<%= data._id %>?_method=PUT" method="POST" enctype="multipart/form-data" onsubmit="return validateForm();"> <!-- Added enctype for file uploads -->
 
   <label for="title"><b>Title</b></label>
-  <input type="text" placeholder="Post Title" name="title" value="<%= data.title %>">
+  <input type="text" placeholder="Post Title" name="title" value="<%= data.title %>" required>
 
   <label for="author"><b>Author</b></label>
-  <input type="text" placeholder="Author Name" name="author" value="<%= data.author %>">
+  <input type="text" placeholder="Author Name" name="author" value="<%= data.author %>" required>
 
   <label for="headerImage"><b>Header Image</b></label>
   <input type="file" name="headerImage">
+  <% if (data.headerImage) { %>
+    <img src="<%= data.headerImage %>" alt="Header Image" style="max-width: 200px; height: auto;">
+  <% } %>
 
   <label for="body"><b>Content</b></label>
-  <textarea name="body" cols="50" rows="10"><%= data.body %></textarea>
+  <textarea name="body" id="body"><%= data.body %></textarea> <!-- TinyMCE will replace this -->
 
   <label for="categories"><b>Categories</b></label>
 
@@ -46,3 +49,32 @@
   <input type="submit" value="Update" class="btn">
 
 </form>
+
+<script src="https://cdn.tiny.cloud/1/5zm60qesc6jws996dbi74dh260hjywix02k6ofi6mpgmm85d/tinymce/6/tinymce.min.js" referrerpolicy="origin"></script>
+<script>
+    // Initialize TinyMCE
+    document.addEventListener("DOMContentLoaded", function () {
+        tinymce.init({
+            selector: 'textarea[name="body"]', // Target the textarea for TinyMCE
+            plugins: 'image link lists table code', // Add the plugins you want
+            toolbar: 'undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | outdent indent | link image | code',
+            menubar: false,
+            height: 300, // Adjust the editor height
+            setup: function (editor) {
+                editor.on('change', function () {
+                    editor.save(); // Update the textarea with the editor content
+                });
+            }
+        });
+    });
+
+    // Form validation function
+    function validateForm() {
+        const bodyContent = tinymce.get('body').getContent();
+        if (!bodyContent.trim()) {
+            alert('Content is required.');
+            return false; // Prevent form submission
+        }
+        return true; // Allow form submission
+    }
+</script>

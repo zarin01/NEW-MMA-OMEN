@@ -56,7 +56,13 @@ router.get('', authMiddleware, async (req, res) => {
     let perPage = 10;
     let page = req.query.page || 1;
 
-    const data = await Post.aggregate([{ $sort: { createdAt: -1 } }])
+    const lastPosts = await Post.find().sort({ createdAt: -1 }).limit(5);
+
+    const ufcPosts = await Post.find({ categories: { $in: ['UFC'] } }).sort({ createdAt: -1 }).limit(5);
+
+    const mmaPosts = await Post.find({ categories: { $in: ['MMA'] } }).sort({ createdAt: -1 }).limit(5);
+
+    const latestPosts = await Post.aggregate([{ $sort: { createdAt: -1 } }])
       .skip(perPage * page - perPage)
       .limit(perPage)
       .exec();
@@ -65,13 +71,14 @@ router.get('', authMiddleware, async (req, res) => {
     const nextPage = parseInt(page) + 1;
     const hasNextPage = nextPage <= Math.ceil(count / perPage);
 
-    // Set layout based on whether the user is logged in or not
     const PageLayout = req.isLoggedIn ? adminLayout : mainLayout;
 
-    // Render the index page with the locals and data
     res.render('index', { 
       locals,
-      data,
+      lastPosts,
+      ufcPosts,
+      mmaPosts,
+      latestPosts,
       current: page,
       nextPage: hasNextPage ? nextPage : null,
       currentRoute: '/',
@@ -81,6 +88,7 @@ router.get('', authMiddleware, async (req, res) => {
 
   } catch (error) {
     console.log(error);
+    res.status(500).send('Server Error');
   }
 });
 

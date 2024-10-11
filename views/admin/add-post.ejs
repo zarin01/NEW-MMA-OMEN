@@ -1,18 +1,9 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Add New Post</title>
-    <script src="https://cdn.tiny.cloud/1/5zm60qesc6jws996dbi74dh260hjywix02k6ofi6mpgmm85d/tinymce/6/tinymce.min.js" referrerpolicy="origin"></script>
-</head>
-<body>
 <a href="/dashboard">&larr; Back</a>
 <div class="admin-title">
     <h2>Add New Post</h2>
 </div>
 
-<form action="/add-post" method="POST" enctype="multipart/form-data">
+<form action="/add-post" method="POST" enctype="multipart/form-data" onsubmit="return validateForm();">
     <label for="title"><b>Title</b></label>
     <input type="text" placeholder="Post Title" name="title" required>
 
@@ -23,7 +14,7 @@
     <input type="file" name="headerImage" required>
 
     <label for="body"><b>Content</b></label>
-    <textarea name="body" required></textarea> <!-- TinyMCE will replace this -->
+    <textarea name="body" id="body"></textarea> <!-- TinyMCE will replace this -->
 
     <label for="categories"><b>Categories</b></label>
     <p><b>Choose Promotions:</b></p>
@@ -47,16 +38,31 @@
     <input type="submit" value="Add" class="btn">
 </form>
 
+<script src="https://cdn.tiny.cloud/1/5zm60qesc6jws996dbi74dh260hjywix02k6ofi6mpgmm85d/tinymce/6/tinymce.min.js" referrerpolicy="origin"></script>
 <script>
+    // Initialize TinyMCE
     document.addEventListener("DOMContentLoaded", function () {
         tinymce.init({
-            selector: 'textarea', // Target the textarea for TinyMCE
+            selector: 'textarea[name="body"]', // Target the textarea for TinyMCE
             plugins: 'image link lists table code', // Add the plugins you want
             toolbar: 'undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | outdent indent | link image | code',
             menubar: false,
             height: 300, // Adjust the editor height
+            setup: function (editor) {
+                editor.on('change', function () {
+                    editor.save(); // Update the textarea with the editor content
+                });
+            }
         });
     });
+
+    // Form validation function
+    function validateForm() {
+        const bodyContent = tinymce.get('body').getContent();
+        if (!bodyContent.trim()) {
+            alert('Content is required.');
+            return false; // Prevent form submission
+        }
+        return true; // Allow form submission
+    }
 </script>
-</body>
-</html>

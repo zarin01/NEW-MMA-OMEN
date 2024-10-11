@@ -1,27 +1,65 @@
-<img src="/img/hero-image.webp" alt="person looking out through window" class="hero-image" width="981" height="528">
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.tiny.cloud/1/5zm60qesc6jws996dbi74dh260hjywix02k6ofi6mpgmm85d/tinymce/6/tinymce.min.js" referrerpolicy="origin"></script>
+    <title>MMA OMEN</title>
+</head>
+<body>
 
-<section class="articles">
-  <h2 class="articles__heading">Latest Posts</h2>
-
-  <ul class="article-ul">
-    <% data.forEach(post => { %>
-      <li>
-        <a href="/post/<%= post._id %>">
-          <span><%= post.title %></span>
-          <span class="article-list__date"><%= post.createdAt.toDateString() %></span>
-        </a>
-      </li>
-    <% }) %>
-  </ul>
-
-
-  <% if (nextPage !== null) { %>
-    <a href="/?page=<%= nextPage %>" class="pagination">&lt; View Older Posts</a>
-  <% } %>
- 
-
+    <!-- Columns Section -->
+    <div class="columns">
+        <div class="column">
+          <h2>UFC Posts</h2>
+          <ul>
+            <% ufcPosts.forEach(post => { %>
+              <li>
+                <a href="/post/<%= post._id %>"><%= post.title %></a>
+                <span class="post-date"><%= post.createdAt.toDateString() %></span>
+              </li>
+            <% }) %>
+          </ul>
+      </div>
+      <div class="column">
+        <h2>MMA Posts</h2>
+        <ul>
+          <% mmaPosts.forEach(post => { %>
+            <li>
+              <a href="/post/<%= post._id %>"><%= post.title %></a>
+              <span class="post-date"><%= post.createdAt.toDateString() %></span>
+            </li>
+          <% }) %>
+        </ul>
+      </div>
+    </div>
   
 
+    <!-- Latest Posts Section -->
+    <section class="articles latest-post">
+        <h2 class="articles__heading">Latest Posts</h2>
+        <ul class="article-ul">
+            <% latestPosts.forEach(post => { %>
+                <li class="article-item">
+                    <img src="<%= post.headerImage %>" alt="<%= post.title %>" class="article-image" />
+                    <div class="article-details">
+                        <a href="/post/<%= post._id %>">
+                            <h3><%= post.title %></h3>
+                        </a>
+                        <span class="article-list__date"><%= post.createdAt.toDateString() %> | </span>
+                        <span class="article-list__author">By <%= post.author %></span>
+                        <p class="article-list__excerpt"><%- post.body.split(' ').slice(0, 30).join(' ') %></p>
+                    </div>
+                </li>
+            <% }) %>
+        </ul>
+
+        <% if (nextPage !== null) { %>
+            <a href="/?page=<%= nextPage %>" class="pagination">&lt; View Older Posts</a>
+        <% } %>
+    </section>
 
 
-</section>
+    <script src="/scripts.js"></script> <!-- Include your JS file -->
+</body>
+</html>
