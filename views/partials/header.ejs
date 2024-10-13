@@ -1,23 +1,5 @@
 <header class="header">
   <a href="/" class="header__logo">MMA OMEN</a>
-
-  <nav class="header__nav">
-    <ul>
-      <li>
-        <a href="/" class="<%= isActiveRoute('/', currentRoute) %>">Home</a>
-      </li>
-      <li>
-        <a href="/about" class="<%= isActiveRoute('/about', currentRoute) %>">About</a>
-      </li>
-      <li>
-        <a href="/contact" class="<%= isActiveRoute('/contact', currentRoute) %>">Contact</a>
-      </li>
-      <li>
-        <a href="/log-in" class="<%= isActiveRoute('/log-in', currentRoute) %>">Log In</a>
-      </li>
-    </ul>
-
-  </nav>
   
   <div class="header__button">
     <button class="searchBtn" aria-expanded="false">
@@ -27,6 +9,7 @@
         <path d="M14.875 14.875L11.7938 11.7938" stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
       </svg>
     </button>
+        <a href="/log-in" class="<%= isActiveRoute('/log-in', currentRoute) %>">Log In</a>
   </div>
 
 </header>

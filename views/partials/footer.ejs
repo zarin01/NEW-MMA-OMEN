@@ -1,3 +1,19 @@
 <footer class="footer">
-  &copy; <%= new Date().getFullYear(); %> Raddy • Built with NodeJs & MongoDB
+  <nav class="header__nav">
+    <ul>
+      <li>
+        <a href="/" class="<%= isActiveRoute('/', currentRoute) %>">Home</a>
+      </li>
+      <li>
+        <a href="/about" class="<%= isActiveRoute('/about', currentRoute) %>">About</a>
+      </li>
+      <li>
+        <a href="/contact" class="<%= isActiveRoute('/contact', currentRoute) %>">Contact</a>
+      </li>
+      <li>
+        <a href="/log-in" class="<%= isActiveRoute('/log-in', currentRoute) %>">Log In</a>
+      </li>
+    </ul>
+  </nav>
+  &copy; <%= new Date().getFullYear(); %> MMA OMEN • Built with NodeJs & MongoDB
 </footer>

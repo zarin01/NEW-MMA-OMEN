@@ -57,10 +57,10 @@ router.get('', authMiddleware, async (req, res) => {
     let page = req.query.page || 1;
 
     const lastPosts = await Post.find().sort({ createdAt: -1 }).limit(5);
-
-    const ufcPosts = await Post.find({ categories: { $in: ['UFC'] } }).sort({ createdAt: -1 }).limit(5);
-
-    const mmaPosts = await Post.find({ categories: { $in: ['MMA'] } }).sort({ createdAt: -1 }).limit(5);
+   
+    const ufcPosts = await Post.find({ categories: /UFC/ }).sort({ createdAt: -1 }).limit(5);
+    const mmaPosts = await Post.find({ categories: /MMA/ }).sort({ createdAt: -1 }).limit(5);
+    
 
     const latestPosts = await Post.aggregate([{ $sort: { createdAt: -1 } }])
       .skip(perPage * page - perPage)

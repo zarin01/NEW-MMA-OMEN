@@ -9,30 +9,66 @@
 <body>
 
     <!-- Columns Section -->
-    <div class="columns">
-        <div class="column">
-          <h2>UFC Posts</h2>
-          <ul>
-            <% ufcPosts.forEach(post => { %>
-              <li>
-                <a href="/post/<%= post._id %>"><%= post.title %></a>
-                <span class="post-date"><%= post.createdAt.toDateString() %></span>
+    <div class="category-columns">
+      <div class="column-first">
+        <h2>UFC Posts</h2>
+        <ul>
+          <% if (ufcPosts.length > 0) { %>
+            <!-- First post (full-width image) -->
+            <li class="post-featured">
+              <img src="<%= ufcPosts[0].headerImage %>" alt="<%= ufcPosts[0].title %>" class="full-width-image">
+              <h3><a href="/post/<%= ufcPosts[0]._id %>"><%= ufcPosts[0].title %></a></h3>
+              <p>By <%= ufcPosts[0].author %></p>
+              <p class="post-date"><%= ufcPosts[0].createdAt.toDateString() %></p>
+            </li>
+          
+            <!-- Remaining posts (image on left, text on right) -->
+            <% ufcPosts.slice(1, 5).forEach(post => { %>
+              <li class="post-split">
+                <div class="split-image">
+                  <img src="<%= post.headerImage %>" alt="<%= post.title %>" class="left-image">
+                </div>
+                <div class="split-content">
+                  <h3><a href="/post/<%= post._id %>"><%= post.title %></a></h3>
+                  <p>By <%= post.author %></p>
+                  <p class="post-date"><%= post.createdAt.toDateString() %></p>
+                </div>
               </li>
             <% }) %>
-          </ul>
+          <% } %>
+        </ul>
       </div>
-      <div class="column">
+    
+      <div class="column-second">
         <h2>MMA Posts</h2>
         <ul>
-          <% mmaPosts.forEach(post => { %>
-            <li>
-              <a href="/post/<%= post._id %>"><%= post.title %></a>
-              <span class="post-date"><%= post.createdAt.toDateString() %></span>
+          <% if (mmaPosts.length > 0) { %>
+            <!-- First post (full-width image) -->
+            <li class="post-featured">
+              <img src="<%= mmaPosts[0].headerImage %>" alt="<%= mmaPosts[0].title %>" class="full-width-image">
+              <h3><a href="/post/<%= mmaPosts[0]._id %>"><%= mmaPosts[0].title %></a></h3>
+              <p>By <%= mmaPosts[0].author %></p>
+              <p class="post-date"><%= mmaPosts[0].createdAt.toDateString() %></p>
             </li>
-          <% }) %>
+          
+            <!-- Remaining posts (image on left, text on right) -->
+            <% mmaPosts.slice(1, 5).forEach(post => { %>
+              <li class="post-split">
+                <div class="split-image">
+                  <img src="<%= post.headerImage %>" alt="<%= post.title %>" class="left-image">
+                </div>
+                <div class="split-content">
+                  <h3><a href="/post/<%= post._id %>"><%= post.title %></a></h3>
+                  <p>By <%= post.author %></p>
+                  <p class="post-date"><%= post.createdAt.toDateString() %></p>
+                </div>
+              </li>
+            <% }) %>
+          <% } %>
         </ul>
       </div>
     </div>
+
   
 
     <!-- Latest Posts Section -->
