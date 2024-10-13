@@ -2,9 +2,12 @@
 
 :root {
   --black: #1c1c1c;
-  --gray: #7E7E7E;
+  --gray: #747474;
   --gray-light: #E4E4E4;
   --red: #b30000;
+  --main-orange: #FF652F;
+  --main-yellow: #FFE400;
+  --main-teal: #14A76C;
   --font-size-base: 1rem;
   --font-size-md: clamp(1.25rem, 0.61vw + 1.1rem, 1.58rem);
   --font-size-lg: clamp(1.56rem, 1vw + 1.31rem, 2.11rem);
@@ -14,10 +17,9 @@
 
 body {
   font-family: 'Poppins', sans-serif;
-  color: var(--black);
+  color: var(--gray);
   font-size: var(--font-size-base);
-  background-color: #FAF5EE;
-  background-image: url("/img/img-noise-361x370.png");
+  background-color: #272727;
   margin: 0;
 }
 
@@ -107,10 +109,12 @@ img {
   font-size: 25px;
   text-decoration: none;
   grid-area: logo;
+  color: var(--main-teal);
 }
 
 .header__logo:hover {
   text-decoration: underline;
+  color: var(--main-yellow);
 }
 
 .header__nav {
