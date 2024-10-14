@@ -18,8 +18,10 @@
             <li class="post-featured">
               <img src="<%= ufcPosts[0].headerImage %>" alt="<%= ufcPosts[0].title %>" class="full-width-image">
               <h3><a href="/post/<%= ufcPosts[0]._id %>"><%= ufcPosts[0].title %></a></h3>
-              <p>By <%= ufcPosts[0].author %></p>
-              <p class="post-date"><%= ufcPosts[0].createdAt.toDateString() %></p>
+              <div class="category-post-meta">
+                <p>By <%= mmaPosts[0].author %></p>
+                <p class="post-date"><%= mmaPosts[0].createdAt.toDateString() %></p>
+              </div>   
             </li>
           
             <!-- Remaining posts (image on left, text on right) -->
@@ -30,8 +32,10 @@
                 </div>
                 <div class="split-content">
                   <h3><a href="/post/<%= post._id %>"><%= post.title %></a></h3>
-                  <p>By <%= post.author %></p>
-                  <p class="post-date"><%= post.createdAt.toDateString() %></p>
+                  <div class="category-post-meta">
+                    <p>By <%= mmaPosts[0].author %></p>
+                    <p class="post-date"><%= mmaPosts[0].createdAt.toDateString() %></p>
+                  </div>   
                 </div>
               </li>
             <% }) %>
@@ -47,8 +51,10 @@
             <li class="post-featured">
               <img src="<%= mmaPosts[0].headerImage %>" alt="<%= mmaPosts[0].title %>" class="full-width-image">
               <h3><a href="/post/<%= mmaPosts[0]._id %>"><%= mmaPosts[0].title %></a></h3>
-              <p>By <%= mmaPosts[0].author %></p>
-              <p class="post-date"><%= mmaPosts[0].createdAt.toDateString() %></p>
+              <div class="category-post-meta">
+                <p>By <%= mmaPosts[0].author %></p>
+                <p class="post-date"><%= mmaPosts[0].createdAt.toDateString() %></p>
+              </div>    
             </li>
           
             <!-- Remaining posts (image on left, text on right) -->
@@ -59,8 +65,10 @@
                 </div>
                 <div class="split-content">
                   <h3><a href="/post/<%= post._id %>"><%= post.title %></a></h3>
-                  <p>By <%= post.author %></p>
-                  <p class="post-date"><%= post.createdAt.toDateString() %></p>
+                  <div class="category-post-meta">
+                    <p>By <%= mmaPosts[0].author %></p>
+                    <p class="post-date"><%= mmaPosts[0].createdAt.toDateString() %></p>
+                  </div>   
                 </div>
               </li>
             <% }) %>
