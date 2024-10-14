@@ -255,26 +255,45 @@ router.get('/register', (req, res) => {
 
   res.render('register', { locals, currentRoute: '/register', isLoggedIn: req.isLoggedIn });
 });
-
 /**
  * POST / User
  * Log In - Register
 */
 router.post('/register', async (req, res) => {
   try {
-    const { username, password } = req.body;
+    // Extract username, password, and honeypot field from the request body
+    const { username, password, honeypot } = req.body;
+
+    // Honeypot logic - If honeypot field is filled, reject the request
+    if (honeypot) {
+      return res.status(400).render('register', { 
+        locals: { 
+          title: "Register", 
+          description: "Create an account.", 
+          errorMessage: 'Bot activity detected. Registration failed.' 
+        }, 
+        currentRoute: '/register',
+        isLoggedIn: req.isLoggedIn
+      });
+    }
+
+    // Hash the password
     const hashedPassword = await bcrypt.hash(password, 10);
 
     try {
+      // Create the user in the database
       const user = await User.create({ username, password: hashedPassword });
 
+      // Generate a JWT token and set it in the cookie
       const token = jwt.sign({ userId: user._id }, jwtSecret, { expiresIn: '1h' });
-
       res.cookie('token', token, { httpOnly: true });
+
+      // Redirect to homepage after successful registration
       res.redirect('/'); 
 
     } catch (error) {
       if (error.code === 11000) {
+        // Username already exists (duplicate key error)
         return res.status(409).render('register', { 
           locals: { 
             title: "Register", 
@@ -285,7 +304,7 @@ router.post('/register', async (req, res) => {
           isLoggedIn: req.isLoggedIn
         });
       }
-      // Other internal errors
+      // Handle other internal errors
       return res.status(500).render('register', { 
         locals: { 
           title: "Register", 

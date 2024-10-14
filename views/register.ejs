@@ -10,20 +10,26 @@
   </header>
 <% } else { %>
 
+  <div class="register-form">
+    <h3>Register</h3>
+    <form action="/register" method="POST">
+      
+      <label for="username"><b>Username</b></label>
+      <input type="text" placeholder="Enter Username" name="username">
+  
+      <label for="password"><b>Password</b></label>
+      <input type="password" placeholder="Enter Password" name="password">
+  
 
-<div class="register-form">
-  <h3>Register</h3>
-  <form action="/register" method="POST">
-
-    <label for="username"><b>Username</b></label>
-    <input type="text" placeholder="Enter Username" name="username">
-
-    <label for="password"><b>Password</b></label>
-    <input type="password" placeholder="Enter Password" name="password">
-
-    <input type="submit" value="Register" class="btn">
-
-  </form>
-</div>
+      <div style="display:none;">
+        <label for="honeypot">If you are human, leave this field empty:</label>
+        <input type="text" name="honeypot" id="honeypot">
+      </div>
+  
+      <input type="submit" value="Register" class="btn">
+  
+    </form>
+  </div>
+  
 
 <% } %>
