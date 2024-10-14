@@ -63,6 +63,7 @@ router.get('/dashboard', authMiddleware, async (req, res) => {
     res.render('admin/dashboard', {
       locals,
       data,
+      currentRoute: '/dashboard',
       layout: adminLayout
     });
 
@@ -84,6 +85,7 @@ router.get('/add-post', authMiddleware, async (req, res) => {
 
     res.render('admin/add-post', {
       locals,
+      currentRoute: '/add-post',
       layout: adminLayout
     });
 
@@ -166,6 +168,7 @@ router.post('/add-post', upload.single('headerImage'), async (req, res) => {
       author,
       categories: categoriesString, // Save categories as a comma-separated string
       headerImage,
+      currentRoute: '/add-post',
       createdAt: new Date(),
       updatedAt: new Date(),
     });
@@ -202,6 +205,7 @@ router.get('/edit-post/:id', authMiddleware, async (req, res) => {
     res.render('admin/edit-post', {
       locals,
       data,
+      currentRoute: '/edit-post/:id',
       layout: adminLayout
     });
   } catch (error) {
@@ -228,6 +232,7 @@ router.put('/edit-post/:id', authMiddleware, upload.single('headerImage'), async
     const updateData = {
       title,
       body,
+      currentRoute: '/edit-post/:id',
       categories: categoriesString, // Save categories as a comma-separated string
       updatedAt: Date.now(),
     };
