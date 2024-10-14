@@ -18,9 +18,6 @@ const path = require('path');
 const aws = require('aws-sdk');
 
 
-
-
-
 /**
  * Check Admin Role middleware
  */
@@ -35,11 +32,10 @@ const authMiddleware = async (req, res, next) => {
     const decoded = jwt.verify(token, jwtSecret);
     req.userId = decoded.userId; 
 
-    // Fetch user from the database to check their role
     const user = await User.findById(req.userId);
 
     if (user && user.role === 'admin') {
-      next(); // User is an admin, allow access
+      next();
     } else {
       return res.status(403).send('Access denied. Admins only.');
     }
@@ -96,10 +92,6 @@ router.get('/add-post', authMiddleware, async (req, res) => {
 
 
 
-
-
-
-
 /**
  * Admin - Handle Image Upload
  * Using Multer
@@ -113,6 +105,8 @@ const s3 = new S3Client({
     secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
   },
 });
+
+
 
 const upload = multer({
   storage: multerS3({
@@ -134,6 +128,8 @@ const upload = multer({
   },
 });
 
+
+
 // Middleware to handle multer errors
 app.use((err, req, res, next) => {
   if (err instanceof multer.MulterError) {
@@ -142,10 +138,6 @@ app.use((err, req, res, next) => {
     res.status(500).send('Server error');
   }
 });
-
-
-
-
 
 
 /**
@@ -159,20 +151,18 @@ router.post('/add-post', upload.single('headerImage'), async (req, res) => {
     const headerImage = req.file ? req.file.location : null;
     const slugify = require('slugify');
 
-    // In your post creation function
     const postTitle = title;
     const slug = slugify(postTitle, { lower: true, strict: true });
 
-    // Convert selected categories (checkboxes) into a comma-separated string
-    const categoriesArray = Array.isArray(categories) ? categories : [categories]; // Ensure it's an array
-    const categoriesString = categoriesArray.join(', '); // Join categories into a single string
+    const categoriesArray = Array.isArray(categories) ? categories : [categories];
+    const categoriesString = categoriesArray.join(', ');
 
     const newPost = new Post({
       title,
       slug: slug,
       body,
       author,
-      categories: categoriesString, // Save categories as a comma-separated string
+      categories: categoriesString,
       headerImage,
       currentRoute: '/add-post',
       createdAt: new Date(),
@@ -189,10 +179,6 @@ router.post('/add-post', upload.single('headerImage'), async (req, res) => {
 
 
 
-
-
-
-
 /**
  * Admin - Edit Post
  * GET /edit-post/:slug
@@ -204,14 +190,12 @@ router.get('/edit-post/:slug', authMiddleware, async (req, res) => {
       description: 'Simple Blog created with NodeJs, Express & MongoDb.'
     };
 
-    // Fetch the post by its slug
     const data = await Post.findOne({ slug: req.params.slug });
 
     if (!data) {
       return res.status(404).send('Post not found');
     }
 
-    // Render the edit form with existing post data
     res.render('admin/edit-post', {
       locals,
       data,
@@ -233,32 +217,28 @@ router.put('/edit-post/:slug', authMiddleware, upload.single('headerImage'), asy
   try {
     const { title, body, categories } = req.body;
 
-    // Combine categories from checkboxes into a comma-separated string
-    const categoriesArray = Array.isArray(categories) ? categories : [categories]; // Ensure it's an array
-    const categoriesString = categoriesArray.join(', '); // Join categories into a single string
+    const categoriesArray = Array.isArray(categories) ? categories : [categories];
+    const categoriesString = categoriesArray.join(', ');
 
     const headerImage = req.file ? req.file.location : null;
 
     const updateData = {
       title,
       body,
-      categories: categoriesString, // Save categories as a comma-separated string
+      categories: categoriesString,
       updatedAt: Date.now(),
     };
 
-    // If a new image was uploaded, update the image field
     if (headerImage) {
       updateData.headerImage = headerImage;
     }
 
-    // Update the post by its slug
     const post = await Post.findOneAndUpdate({ slug: req.params.slug }, updateData, { new: true });
 
     if (!post) {
       return res.status(404).send('Post not found');
     }
 
-    // Redirect back to the post editing page with success message
     res.redirect(`/edit-post/${post.slug}?success=true`);
   } catch (error) {
     console.error(error);

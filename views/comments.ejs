@@ -5,8 +5,9 @@
       <ul class="comments-list">
         <% comments.forEach(comment => { %>
           <li>
-            <p><strong><%= comment.author %>:</strong> <%= comment.body %></p>
-            <p class="comment-date"><%= comment.createdAt.toDateString() %></p>
+            <strong><%= comment.author %></strong>
+            <p><%= comment.sanitizedBody || sanitizeComment(comment.body) %></p> <!-- Use sanitized body for display -->
+            <small><%= comment.createdAt.toDateString() %></small>
           </li>
         <% }) %>
       </ul>

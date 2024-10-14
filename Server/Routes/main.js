@@ -18,7 +18,7 @@ const authMiddleware = async (req, res, next) => {
   const token = req.cookies.token;
 
   if (!token) {
-    req.isLoggedIn = false; // User is not logged in
+    req.isLoggedIn = false;
     return next();
   }
 
@@ -26,18 +26,15 @@ const authMiddleware = async (req, res, next) => {
     const decoded = jwt.verify(token, jwtSecret);
     req.userId = decoded.userId;
 
-    // Fetch user from the database
     const user = await User.findById(req.userId);
 
-    // If the user exists, they are logged in
     req.isLoggedIn = !!user;
 
-    // Attach user data to request for easier access in routes
-    req.user = user; // Store user object on request
+    req.user = user;
 
-    next(); // Proceed to the next middleware or route handler
+    next();
   } catch (error) {
-    req.isLoggedIn = false; // If there's an error (invalid token, etc.), consider the user not logged in
+    req.isLoggedIn = false;
     next();
   }
 };
@@ -163,8 +160,7 @@ router.post('/log-in', authMiddleware, async (req, res) => {
     const token = jwt.sign({ userId: user._id }, jwtSecret);
     res.cookie('token', token, { httpOnly: true });
 
-    // Redirect to the homepage
-    res.redirect('/'); // Redirect to the homepage after logging in
+    res.redirect('/');
 
   } catch (error) {
     console.log(error);
@@ -182,7 +178,6 @@ router.get('/post/:slug', authMiddleware, async (req, res) => {
   try {
     const slug = req.params.slug;
 
-    // Find the post by slug instead of _id
     const data = await Post.findOne({ slug: slug });
 
     if (!data) {
@@ -208,6 +203,9 @@ router.get('/post/:slug', authMiddleware, async (req, res) => {
     res.status(500).send('Server error');
   }
 });
+
+
+
 /**
  * POST /
  * Post - searchTerm
@@ -270,16 +268,18 @@ router.get('/register', authMiddleware, (req, res) => {
 
   res.render('register', { locals, currentRoute: '/register', isLoggedIn: req.isLoggedIn });
 });
+
+
+
 /**
  * POST / User
  * Log In - Register
 */
 router.post('/register', authMiddleware, async (req, res) => {
   try {
-    // Extract username, password, and honeypot field from the request body
+
     const { username, password, honeypot } = req.body;
 
-    // Honeypot logic - If honeypot field is filled, reject the request
     if (honeypot) {
       return res.status(400).render('register', { 
         locals: { 
@@ -292,23 +292,18 @@ router.post('/register', authMiddleware, async (req, res) => {
       });
     }
 
-    // Hash the password
     const hashedPassword = await bcrypt.hash(password, 10);
 
     try {
-      // Create the user in the database
       const user = await User.create({ username, password: hashedPassword });
 
-      // Generate a JWT token and set it in the cookie
       const token = jwt.sign({ userId: user._id }, jwtSecret, { expiresIn: '1h' });
       res.cookie('token', token, { httpOnly: true });
 
-      // Redirect to homepage after successful registration
       res.redirect('/'); 
 
     } catch (error) {
       if (error.code === 11000) {
-        // Username already exists (duplicate key error)
         return res.status(409).render('register', { 
           locals: { 
             title: "Register", 
@@ -319,7 +314,6 @@ router.post('/register', authMiddleware, async (req, res) => {
           isLoggedIn: req.isLoggedIn
         });
       }
-      // Handle other internal errors
       return res.status(500).render('register', { 
         locals: { 
           title: "Register", 
@@ -352,7 +346,6 @@ router.post('/register', authMiddleware, async (req, res) => {
 */
 router.get('/logout', authMiddleware, (req, res) => {
   res.clearCookie('token');
-  //res.json({ message: 'Logout successful.'});
   res.redirect('/');
 });
 
@@ -386,7 +379,25 @@ router.get('/post/:slug/comments', authMiddleware, async (req, res) => {
   }
 });
 
-// Add a comment
+const badWords = ["badword1", "badword2", "badword3"]; // Add more words as needed
+
+
+const sanitizeComment = (comment) => {
+  let sanitizedComment = comment;
+
+  badWords.forEach(word => {
+    const regex = new RegExp(`\\b${word}\\b`, 'gi'); // Match whole words, case insensitive
+    sanitizedComment = sanitizedComment.replace(regex, '*'.repeat(word.length));
+  });
+
+  return sanitizedComment;
+};
+
+
+/**
+ * POST /
+ * Comment
+*/
 router.post('/post/:slug/comments', authMiddleware, async (req, res) => {
   try {
     const post = await Post.findOne({ slug: req.params.slug });
@@ -396,11 +407,14 @@ router.post('/post/:slug/comments', authMiddleware, async (req, res) => {
       return res.status(401).send('You must be logged in to comment.');
     }
 
-    // Ensure the username is available from req.user
+    // Sanitize the comment body
+    const sanitizedBody = sanitizeComment(req.body.body);
+
     const newComment = new Comment({
       post: post._id,
-      author: req.user.username || req.user.email, // Use the username or another identifier
-      body: req.body.body,
+      author: req.user.username || req.user.email,
+      body: req.body.body, // Save the original body
+      sanitizedBody, // Optionally save the sanitized body if you want to display it directly
       createdAt: Date.now()
     });
 
