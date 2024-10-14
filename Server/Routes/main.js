@@ -164,23 +164,25 @@ router.post('/log-in', async (req, res) => {
 
 
 
-
-
-
 /**
  * GET /
- * Post :id
-*/
-router.get('/post/:id', async (req, res) => {
+ * Post :slug
+ */
+router.get('/post/:slug', async (req, res) => {
   try {
-    let slug = req.params.id;
+    const slug = req.params.slug;
 
-    const data = await Post.findById({ _id: slug });
+    // Find the post by slug instead of _id
+    const data = await Post.findOne({ slug: slug });
+
+    if (!data) {
+      return res.status(404).send('Post not found');
+    }
 
     const locals = {
       title: data.title,
       description: "Simple Blog created with NodeJs, Express & MongoDb.",
-    }
+    };
 
     res.render('post', { 
       locals,
@@ -190,11 +192,9 @@ router.get('/post/:id', async (req, res) => {
     });
   } catch (error) {
     console.log(error);
+    res.status(500).send('Server error');
   }
-
 });
-
-
 /**
  * POST /
  * Post - searchTerm

@@ -157,6 +157,11 @@ router.post('/add-post', upload.single('headerImage'), async (req, res) => {
   try {
     const { title, body, author, categories } = req.body;
     const headerImage = req.file ? req.file.location : null;
+    const slugify = require('slugify');
+
+    // In your post creation function
+    const postTitle = title;
+    const slug = slugify(postTitle, { lower: true, strict: true });
 
     // Convert selected categories (checkboxes) into a comma-separated string
     const categoriesArray = Array.isArray(categories) ? categories : [categories]; // Ensure it's an array
@@ -164,6 +169,7 @@ router.post('/add-post', upload.single('headerImage'), async (req, res) => {
 
     const newPost = new Post({
       title,
+      slug: slug,
       body,
       author,
       categories: categoriesString, // Save categories as a comma-separated string
@@ -189,23 +195,27 @@ router.post('/add-post', upload.single('headerImage'), async (req, res) => {
 
 /**
  * Admin - Edit Post
- * GET /edit-post/:id
+ * GET /edit-post/:slug
  */
-router.get('/edit-post/:id', authMiddleware, async (req, res) => {
+router.get('/edit-post/:slug', authMiddleware, async (req, res) => {
   try {
     const locals = {
       title: 'Edit Post',
       description: 'Simple Blog created with NodeJs, Express & MongoDb.'
     };
 
-    // Fetch the post by its ID
-    const data = await Post.findOne({ _id: req.params.id });
+    // Fetch the post by its slug
+    const data = await Post.findOne({ slug: req.params.slug });
+
+    if (!data) {
+      return res.status(404).send('Post not found');
+    }
 
     // Render the edit form with existing post data
     res.render('admin/edit-post', {
       locals,
       data,
-      currentRoute: '/edit-post/:id',
+      currentRoute: `/edit-post/${req.params.slug}`,
       layout: adminLayout
     });
   } catch (error) {
@@ -217,9 +227,9 @@ router.get('/edit-post/:id', authMiddleware, async (req, res) => {
 
 /**
  * Admin - Update Post
- * PUT /edit-post/:id
+ * PUT /edit-post/:slug
  */
-router.put('/edit-post/:id', authMiddleware, upload.single('headerImage'), async (req, res) => {
+router.put('/edit-post/:slug', authMiddleware, upload.single('headerImage'), async (req, res) => {
   try {
     const { title, body, categories } = req.body;
 
@@ -232,7 +242,6 @@ router.put('/edit-post/:id', authMiddleware, upload.single('headerImage'), async
     const updateData = {
       title,
       body,
-      currentRoute: '/edit-post/:id',
       categories: categoriesString, // Save categories as a comma-separated string
       updatedAt: Date.now(),
     };
@@ -242,11 +251,15 @@ router.put('/edit-post/:id', authMiddleware, upload.single('headerImage'), async
       updateData.headerImage = headerImage;
     }
 
-    // Update the post in the database
-    await Post.findByIdAndUpdate(req.params.id, updateData);
+    // Update the post by its slug
+    const post = await Post.findOneAndUpdate({ slug: req.params.slug }, updateData, { new: true });
+
+    if (!post) {
+      return res.status(404).send('Post not found');
+    }
 
     // Redirect back to the post editing page with success message
-    res.redirect(`/edit-post/${req.params.id}?success=true`);
+    res.redirect(`/edit-post/${post.slug}?success=true`);
   } catch (error) {
     console.error(error);
     res.status(500).send('Server Error');

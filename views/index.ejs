@@ -17,7 +17,7 @@
             <!-- First post (full-width image) -->
             <li class="post-featured">
               <img src="<%= ufcPosts[0].headerImage %>" alt="<%= ufcPosts[0].title %>" class="full-width-image">
-              <h3><a href="/post/<%= ufcPosts[0]._id %>"><%= ufcPosts[0].title %></a></h3>
+              <h3><a href="/post/<%= ufcPosts[0].slug %>"><%= ufcPosts[0].title %></a></h3>
               <div class="category-post-meta">
                 <p>By <%= ufcPosts[0].author %></p>
                 <p class="post-date"><%= ufcPosts[0].createdAt.toDateString() %></p>
@@ -31,10 +31,10 @@
                   <img src="<%= post.headerImage %>" alt="<%= post.title %>" class="left-image">
                 </div>
                 <div class="split-content">
-                  <h3><a href="/post/<%= post._id %>"><%= post.title %></a></h3>
+                  <h3><a href="/post/<%= post.slug %>"><%= post.title %></a></h3>
                   <div class="category-post-meta">
-                    <p>By <%= ufcPosts[0].author %></p>
-                    <p class="post-date"><%= ufcPosts[0].createdAt.toDateString() %></p>
+                    <p>By <%= post.author %></p>
+                    <p class="post-date"><%= post.createdAt.toDateString() %></p>
                   </div>   
                 </div>
               </li>
@@ -50,7 +50,7 @@
             <!-- First post (full-width image) -->
             <li class="post-featured">
               <img src="<%= mmaPosts[0].headerImage %>" alt="<%= mmaPosts[0].title %>" class="full-width-image">
-              <h3><a href="/post/<%= mmaPosts[0]._id %>"><%= mmaPosts[0].title %></a></h3>
+              <h3><a href="/post/<%= mmaPosts[0].slug %>"><%= mmaPosts[0].title %></a></h3>
               <div class="category-post-meta">
                 <p>By <%= mmaPosts[0].author %></p>
                 <p class="post-date"><%= mmaPosts[0].createdAt.toDateString() %></p>
@@ -64,10 +64,10 @@
                   <img src="<%= post.headerImage %>" alt="<%= post.title %>" class="left-image">
                 </div>
                 <div class="split-content">
-                  <h3><a href="/post/<%= post._id %>"><%= post.title %></a></h3>
+                  <h3><a href="/post/<%= post.slug %>"><%= post.title %></a></h3>
                   <div class="category-post-meta">
-                    <p>By <%= mmaPosts[0].author %></p>
-                    <p class="post-date"><%= mmaPosts[0].createdAt.toDateString() %></p>
+                    <p>By <%= post.author %></p>
+                    <p class="post-date"><%= post.createdAt.toDateString() %></p>
                   </div>   
                 </div>
               </li>
@@ -87,7 +87,7 @@
                 <li class="article-item">
                     <img src="<%= post.headerImage %>" alt="<%= post.title %>" class="article-image" />
                     <div class="article-details">
-                        <a href="/post/<%= post._id %>">
+                        <a href="/post/<%= post.slug %>">
                             <h3><%= post.title %></h3>
                         </a>
                         <span class="article-list__date"><%= post.createdAt.toDateString() %> | </span>
