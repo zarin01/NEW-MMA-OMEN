@@ -42,8 +42,8 @@ app.use(session({
   
   
   
-  app.use('/', require('./server/routes/main'));
-  app.use('/', require('./server/routes/admin'));
+  app.use('/', require('./Server/Routes/main'));
+  app.use('/', require('./Server/Routes/admin'));
   
   app.listen(PORT, ()=> {
     console.log(`App listening on port ${PORT}`);
