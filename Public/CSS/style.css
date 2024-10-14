@@ -93,7 +93,7 @@ img {
   grid-template-areas: 
   "logo button"
   "menu menu";
-  padding-top: 10px;
+  padding: 10px 10px 20px 10px;
 }
 
 @media only screen and (min-width: 768px) {
@@ -182,6 +182,8 @@ img {
 
 .column-first, .column-second {
   width: 48%;
+  background-color: var(--gray);
+  border-radius: 10px;
 }
 
 .column-first h2, .column-second h2{
@@ -310,7 +312,11 @@ img {
 
 
 /* Footer */
-
+footer{
+  text-align: center;
+  padding: 20px;
+  margin: 40px 10px;
+}
 
 
 /* Log In */
@@ -511,26 +517,20 @@ img {
   right: 0;
 }
 
-
-.searchBar.open {
-  transform: translateY(0);
-  transition: transform 0.1s;
-}
-
-.searchBar input {
+#searchInput {
   margin: 0;
-  border: 0;
+  border-radius: 10px;
+  padding: 5px 20px;
 }
 
-#searchClose {
+.searchBtn svg{
   position: absolute;
-  top: 0;
-  right: 0;
-  color: var(--gray-light);
-  padding: 15px;
+  top: 20px;
+  right: 120px;
 }
 
 
+/* Pagintation */
 .pagination {
   font-size: 1.3rem;
   color: var(--gray);
