@@ -1,0 +1,30 @@
+<section class="comments-section">
+    <h2>Comments for <%= post.title %></h2>
+  
+    <% if (comments.length > 0) { %>
+      <ul class="comments-list">
+        <% comments.forEach(comment => { %>
+          <li>
+            <p><strong><%= comment.author %>:</strong> <%= comment.body %></p>
+            <p class="comment-date"><%= comment.createdAt.toDateString() %></p>
+          </li>
+        <% }) %>
+      </ul>
+    <% } else { %>
+      <p>No comments yet. Be the first to comment!</p>
+    <% } %>
+  
+    <% if (isLoggedIn) { %>
+      <form action="/post/<%= post.slug %>/comments" method="POST">
+        <div>
+          <label for="comment-body">Your Comment:</label>
+          <textarea id="comment-body" name="body" required></textarea>
+        </div>
+        <button type="submit">Submit Comment</button>
+      </form>
+    <% } else { %>
+      <p>You must be <a href="/login">logged in</a> to add a comment.</p>
+    <% } %>
+    
+  </section>
+  

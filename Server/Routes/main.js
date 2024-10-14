@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const Post = require('../models/Post');
 const User = require('../models/User');
+const Comment = require('../models/Comment');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 
@@ -13,7 +14,6 @@ const mainLayout = '../views/layouts/main';
 /**
  * Check Login middleware
  */
-
 const authMiddleware = async (req, res, next) => {
   const token = req.cookies.token;
 
@@ -31,6 +31,9 @@ const authMiddleware = async (req, res, next) => {
 
     // If the user exists, they are logged in
     req.isLoggedIn = !!user;
+
+    // Attach user data to request for easier access in routes
+    req.user = user; // Store user object on request
 
     next(); // Proceed to the next middleware or route handler
   } catch (error) {
@@ -119,12 +122,19 @@ router.get('/log-in', authMiddleware, async (req, res) => {
     }
   }
 
+  const PageLayout = req.isLoggedIn ? adminLayout : mainLayout;
+
   const locals = {
     title: "Admin",
     description: "Simple Blog created with NodeJs, Express & MongoDb."
   };
 
-  res.render('admin/index', { locals, currentRoute: '/log-in', isLoggedIn: req.isLoggedIn });
+  res.render('admin/index', { 
+    locals, 
+    currentRoute: '/log-in',
+    layout: PageLayout,
+    isLoggedIn: req.isLoggedIn 
+  });
 });
 
 
@@ -134,7 +144,7 @@ router.get('/log-in', authMiddleware, async (req, res) => {
  * POST /
  * Admin - Check Login
 */
-router.post('/log-in', async (req, res) => {
+router.post('/log-in', authMiddleware, async (req, res) => {
   try {
     const { username, password } = req.body;
 
@@ -168,7 +178,7 @@ router.post('/log-in', async (req, res) => {
  * GET /
  * Post :slug
  */
-router.get('/post/:slug', async (req, res) => {
+router.get('/post/:slug', authMiddleware, async (req, res) => {
   try {
     const slug = req.params.slug;
 
@@ -184,9 +194,12 @@ router.get('/post/:slug', async (req, res) => {
       description: "Simple Blog created with NodeJs, Express & MongoDb.",
     };
 
+    const PageLayout = req.isLoggedIn ? adminLayout : mainLayout;
+
     res.render('post', { 
       locals,
       data,
+      layout: PageLayout,
       currentRoute: `/post/${slug}`,
       isLoggedIn: req.isLoggedIn
     });
@@ -199,7 +212,7 @@ router.get('/post/:slug', async (req, res) => {
  * POST /
  * Post - searchTerm
 */
-router.post('/search', async (req, res) => {
+router.post('/search', authMiddleware, async (req, res) => {
   try {
     const locals = {
       title: "Search",
@@ -234,10 +247,12 @@ router.post('/search', async (req, res) => {
  * GET /
  * About
 */
-router.get('/about', (req, res) => {
+router.get('/about', authMiddleware, (req, res) => {
+  const PageLayout = req.isLoggedIn ? adminLayout : mainLayout;
   res.render('about', {
     currentRoute: '/about',
-    isLoggedIn: req.isLoggedIn
+    isLoggedIn: req.isLoggedIn,
+    layout: PageLayout
   });
 });
 
@@ -247,7 +262,7 @@ router.get('/about', (req, res) => {
  * GET / User
  * Log In - Register
 */
-router.get('/register', (req, res) => {
+router.get('/register', authMiddleware, (req, res) => {
   const locals = {
     title: "Register",
     description: "Create an account."
@@ -259,7 +274,7 @@ router.get('/register', (req, res) => {
  * POST / User
  * Log In - Register
 */
-router.post('/register', async (req, res) => {
+router.post('/register', authMiddleware, async (req, res) => {
   try {
     // Extract username, password, and honeypot field from the request body
     const { username, password, honeypot } = req.body;
@@ -335,13 +350,68 @@ router.post('/register', async (req, res) => {
  * GET /
  * User Logout
 */
-router.get('/logout', (req, res) => {
+router.get('/logout', authMiddleware, (req, res) => {
   res.clearCookie('token');
   //res.json({ message: 'Logout successful.'});
   res.redirect('/');
 });
 
 
+/**
+ * GET /
+ * Comment
+*/
+router.get('/post/:slug/comments', authMiddleware, async (req, res) => {
+  try {
+    const post = await Post.findOne({ slug: req.params.slug });
+    const comments = await Comment.find({ post: post._id }).sort({ createdAt: -1 });
+    const PageLayout = req.isLoggedIn ? adminLayout : mainLayout;
+
+    const locals = {
+      title: `${post.title} - Comments`,
+      description: 'View and add comments to the post.'
+    };
+
+    res.render('comments', {
+      post,
+      comments,
+      layout: PageLayout,
+      currentRoute: '/post/:slug/comments',
+      isLoggedIn: req.isLoggedIn,
+      locals
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).send('Server Error');
+  }
+});
+
+// Add a comment
+router.post('/post/:slug/comments', authMiddleware, async (req, res) => {
+  try {
+    const post = await Post.findOne({ slug: req.params.slug });
+
+    // Check if user is logged in
+    if (!req.isLoggedIn) {
+      return res.status(401).send('You must be logged in to comment.');
+    }
+
+    // Ensure the username is available from req.user
+    const newComment = new Comment({
+      post: post._id,
+      author: req.user.username || req.user.email, // Use the username or another identifier
+      body: req.body.body,
+      createdAt: Date.now()
+    });
+
+    await newComment.save();
+
+    res.redirect(`/post/${post.slug}/comments`);
+  } catch (error) {
+    console.error(error);
+    res.status(500).send('Server Error');
+  }
+});
 
 
 module.exports = router;
