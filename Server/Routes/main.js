@@ -6,10 +6,12 @@ const Comment = require('../models/Comment');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const badWords = require('../middleware/removedWordsList');
+const Contact = require('../models/Contact');
 
 const jwtSecret = process.env.JWT_SECRET;
 const adminLayout = '../views/layouts/admin';
 const mainLayout = '../views/layouts/main';
+
 
 
 
@@ -424,5 +426,44 @@ router.post('/post/:slug/comments', authMiddleware, async (req, res) => {
 });
 
 
+/**
+ * GET /
+ * Contact
+ */
+router.get('/contact', authMiddleware, (req, res) => {
+
+  const PageLayout = req.isLoggedIn ? adminLayout : mainLayout;
+  res.render('contact', {
+    currentRoute: '/contact',
+    isLoggedIn: req.isLoggedIn
+  });
+});
+
+/**
+ * POST /
+ * Contact
+ */
+router.post('/contact', authMiddleware, async (req, res) => {
+  try {
+    const { name, email, message } = req.body;
+    const PageLayout = req.isLoggedIn ? adminLayout : mainLayout;
+    
+    const newContact = new Contact({
+      name,
+      email,
+      message,
+      layout: PageLayout,
+      currentRoute: '/contact',
+      
+    });
+
+    await newContact.save();
+
+    res.redirect('/contact?success=true');
+  } catch (err) {
+    console.error(err);
+    res.status(500).send('Server Error');
+  }
+});
 
 module.exports = router;
