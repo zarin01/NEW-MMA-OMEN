@@ -766,3 +766,33 @@ footer{
 .contact-container button[type="submit"]:hover {
   background-color: #0056b3;
 }
+
+
+/* Sidebar */
+.sidebar {
+  width: 300px; /* Adjust as needed */
+  padding: 20px;
+  background-color: #f4f4f4; /* Adjust as needed */
+  border: 1px solid #ddd; /* Optional styling */
+}
+.sidebar-section {
+  margin-bottom: 20px;
+}
+.sidebar-section h3 {
+  font-size: 1.5em;
+  margin-bottom: 10px;
+}
+.sidebar-section ul {
+  list-style-type: none;
+  padding: 0;
+}
+.sidebar-section li {
+  margin-bottom: 5px;
+}
+.sidebar-section a {
+  text-decoration: none;
+  color: #007bff; /* Adjust as needed */
+}
+.sidebar-section a:hover {
+  text-decoration: underline;
+}

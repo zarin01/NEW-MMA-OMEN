@@ -1,0 +1,40 @@
+<aside class="sidebar">
+    <!-- Recent Posts Section -->
+    <div class="sidebar-section">
+      <h3>Recent Posts</h3>
+      <ul class="recent-posts">
+        <% recentPosts.forEach(function(post) { %>
+          <li>
+            <a href="/posts/<%= post.id %>"><%= post.title %></a>
+          </li>
+        <% }); %>
+      </ul>
+    </div>
+  
+    <!-- Sports Section -->
+    <div class="sidebar-section">
+      <h3>Sports</h3>
+      <ul class="sports-list">
+        <% sports.forEach(function(sport) { %>
+          <li>
+            <a href="/sports/<%= sport.id %>"><%= sport.name %></a>
+          </li>
+        <% }); %>
+      </ul>
+    </div>
+  
+    <!-- Categories Section -->
+    <div class="sidebar-section">
+      <h3>Categories</h3>
+      <ul class="categories-list">
+        <% categories.forEach(function(category) { %>
+          <li>
+            <a href="/categories/<%= category.id %>"><%= category.name %></a>
+          </li>
+        <% }); %>
+      </ul>
+    </div>
+  </aside>
+  
+
+  
