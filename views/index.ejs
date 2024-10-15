@@ -3,81 +3,73 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <script src="https://cdn.tiny.cloud/1/5zm60qesc6jws996dbi74dh260hjywix02k6ofi6mpgmm85d/tinymce/6/tinymce.min.js" referrerpolicy="origin"></script>
+    <meta name="description" content="Stay updated with the latest MMA news, events, and highlights from UFC, Bellator, ONE Championship, and more.">
+    <meta name="keywords" content="MMA, UFC, Bellator, ONE Championship, PFL, Boxing, Kickboxing, Muay Thai, Jiu-Jitsu, Wrestling">
+    <meta name="author" content="MMA OMEN">
+    <meta property="og:title" content="MMA OMEN - Latest MMA News and Updates">
+    <meta property="og:description" content="Discover the latest news, fight highlights, and articles from the world of MMA, including UFC, Bellator, and more.">
+    <meta property="og:image" content="/path/to/og-image.jpg"> <!-- Update with actual image path -->
+    <meta property="og:url" content="https://www.yourmmablog.com"> <!-- Update with actual URL -->
     <title>MMA OMEN</title>
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-  <div class="home">
-    <div class="home-content">
-       <!-- Columns Section -->
+
+    <!-- Featured Posts Section -->
+    <section class="featured-posts">
+        <div class="featured-post">
+            <img src="<%= featuredPosts[0].headerImage %>" alt="<%= featuredPosts[0].title %>" class="featured-image">
+            <div class="overlay-text">
+              <h2><a href="/post/<%= featuredPosts[0].slug %>"><%= featuredPosts[0].title %></a></h2>
+              <p class="post-date"><%= featuredPosts[0].createdAt.toDateString() %></p>
+            </div>
+        </div>
+        <div class="featured-post">
+            <img src="<%= featuredPosts[1].headerImage %>" alt="<%= featuredPosts[1].title %>" class="featured-image">
+            <div class="overlay-text">
+              <h2><a href="/post/<%= featuredPosts[1].slug %>"><%= featuredPosts[1].title %></a></h2>
+              <p class="post-date"><%= featuredPosts[1].createdAt.toDateString() %></p>
+            </div>
+        </div>
+    </section>
+ 
+    <!-- Columns Section -->
     <div class="category-columns">
-      <div class="column-first">
-        <h2>UFC Posts</h2>
-        <ul>
-          <% if (ufcPosts.length > 0) { %>
-            <!-- First post (full-width image) -->
-            <li class="post-featured">
-              <img src="<%= ufcPosts[0].headerImage %>" alt="<%= ufcPosts[0].title %>" class="full-width-image">
-              <h3><a href="/post/<%= ufcPosts[0].slug %>"><%= ufcPosts[0].title %></a></h3>
-              <div class="category-post-meta">
-                <p>By <%= ufcPosts[0].author %></p>
-                <p class="post-date"><%= ufcPosts[0].createdAt.toDateString() %></p>
-              </div>   
-            </li>
-          
-            <!-- Remaining posts (image on left, text on right) -->
-            <% ufcPosts.slice(1, 5).forEach(post => { %>
-              <li class="post-split">
-                <div class="split-image">
-                  <img src="<%= post.headerImage %>" alt="<%= post.title %>" class="left-image">
-                </div>
-                <div class="split-content">
-                  <h3><a href="/post/<%= post.slug %>"><%= post.title %></a></h3>
-                  <div class="category-post-meta">
-                    <p>By <%= post.author %></p>
-                    <p class="post-date"><%= post.createdAt.toDateString() %></p>
-                  </div>   
-                </div>
-              </li>
-            <% }) %>
-          <% } %>
-        </ul>
-      </div>
-    
-      <div class="column-second">
-        <h2>MMA Posts</h2>
-        <ul>
-          <% if (mmaPosts.length > 0) { %>
-            <!-- First post (full-width image) -->
-            <li class="post-featured">
-              <img src="<%= mmaPosts[0].headerImage %>" alt="<%= mmaPosts[0].title %>" class="full-width-image">
-              <h3><a href="/post/<%= mmaPosts[0].slug %>"><%= mmaPosts[0].title %></a></h3>
-              <div class="category-post-meta">
-                <p>By <%= mmaPosts[0].author %></p>
-                <p class="post-date"><%= mmaPosts[0].createdAt.toDateString() %></p>
-              </div>    
-            </li>
-          
-            <!-- Remaining posts (image on left, text on right) -->
-            <% mmaPosts.slice(1, 5).forEach(post => { %>
-              <li class="post-split">
-                <div class="split-image">
-                  <img src="<%= post.headerImage %>" alt="<%= post.title %>" class="left-image">
-                </div>
-                <div class="split-content">
-                  <h3><a href="/post/<%= post.slug %>"><%= post.title %></a></h3>
-                  <div class="category-post-meta">
-                    <p>By <%= post.author %></p>
-                    <p class="post-date"><%= post.createdAt.toDateString() %></p>
-                  </div>   
-                </div>
-              </li>
-            <% }) %>
-          <% } %>
-        </ul>
-      </div>
+      <ul class="three-column-grid">
+          <% ufcPosts.slice(0, 3).forEach(post => { %>
+          <li class="post-split">
+              <div class="post-overlay">
+                  <img src="<%= post.headerImage %>" alt="<%= post.title %>" class="grid-image">
+                  <div class="overlay-text">
+                      <h3><a href="/post/<%= post.slug %>"><%= post.title %></a></h3>
+                      <p class="post-date"><%= post.createdAt.toDateString() %></p>
+                  </div>
+              </div>
+          </li>
+          <% }) %>
+      </ul>
     </div>
 
+    
+    <div class="column-second">
+      <ul class="three-column-grid">
+          <% mmaPosts.slice(0, 3).forEach(post => { %>
+          <li class="post-split">
+              <div class="post-overlay">
+                  <img src="<%= post.headerImage %>" alt="<%= post.title %>" class="grid-image">
+                  <div class="overlay-text">
+                      <h3><a href="/post/<%= post.slug %>"><%= post.title %></a></h3>
+                      <p class="post-date"><%= post.createdAt.toDateString() %></p>
+                  </div>
+              </div>
+          </li>
+          <% }) %>
+      </ul>
+  </div>
+  
+
+  <div class="home">
+    <div class="home-content">
   
 
     <!-- Latest Posts Section -->

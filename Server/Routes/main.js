@@ -53,20 +53,21 @@ const authMiddleware = async (req, res, next) => {
 router.get('', authMiddleware, async (req, res) => {
   try {
     const locals = {
-      title: "MMA OMEN",
-      description: "MMA Omen, MMA blog and media source."
+      title: "MMA OMEN"
     };
 
     let perPage = 10;
     let page = req.query.page || 1;
 
+    // Query for the two most recent featured posts
+    const featuredPosts = await Post.find({ isFeatured: true }).sort({ createdAt: -1 }).limit(2);
+
+    // Fetch last 5 posts, UFC posts, and MMA posts
     const lastPosts = await Post.find().sort({ createdAt: -1 }).limit(5);
-   
     const ufcPosts = await Post.find({ categories: /UFC/ }).sort({ createdAt: -1 }).limit(5);
     const mmaPosts = await Post.find({ categories: /MMA/ }).sort({ createdAt: -1 }).limit(5);
 
-    
-
+    // Pagination logic for latest posts
     const latestPosts = await Post.aggregate([{ $sort: { createdAt: -1 } }])
       .skip(perPage * page - perPage)
       .limit(perPage)
@@ -78,8 +79,10 @@ router.get('', authMiddleware, async (req, res) => {
 
     const PageLayout = req.isLoggedIn ? adminLayout : mainLayout;
 
+    // Render the page, including featured posts
     res.render('index', { 
       locals,
+      featuredPosts,   // Pass the featured posts to the view
       lastPosts,
       ufcPosts,
       mmaPosts,
@@ -96,6 +99,7 @@ router.get('', authMiddleware, async (req, res) => {
     res.status(500).send('Server Error');
   }
 });
+
 
 
 
@@ -436,6 +440,7 @@ router.get('/contact', authMiddleware, (req, res) => {
   const PageLayout = req.isLoggedIn ? adminLayout : mainLayout;
   res.render('contact', {
     currentRoute: '/contact',
+    layout: PageLayout,
     isLoggedIn: req.isLoggedIn
   });
 });

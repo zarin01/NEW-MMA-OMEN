@@ -75,8 +75,7 @@ router.get('/dashboard', authMiddleware, async (req, res) => {
 router.get('/add-post', authMiddleware, async (req, res) => {
   try {
     const locals = {
-      title: 'Add Post',
-      description: 'Simple Blog created with NodeJs, Express & MongoDb.'
+      title: 'Add Post'
     };
 
     res.render('admin/add-post', {
@@ -84,7 +83,6 @@ router.get('/add-post', authMiddleware, async (req, res) => {
       currentRoute: '/add-post',
       layout: adminLayout
     });
-
   } catch (error) {
     console.log(error);
   }
@@ -147,7 +145,7 @@ app.use((err, req, res, next) => {
 
 router.post('/add-post', upload.single('headerImage'), async (req, res) => {
   try {
-    const { title, body, author, categories } = req.body;
+    const { title, body, author, categories, isFeatured } = req.body;
     const headerImage = req.file ? req.file.location : null;
     const slugify = require('slugify');
 
@@ -164,7 +162,7 @@ router.post('/add-post', upload.single('headerImage'), async (req, res) => {
       author,
       categories: categoriesString,
       headerImage,
-      currentRoute: '/add-post',
+      isFeatured: isFeatured === 'true',
       createdAt: new Date(),
       updatedAt: new Date(),
     });
@@ -176,6 +174,7 @@ router.post('/add-post', upload.single('headerImage'), async (req, res) => {
     res.status(500).send('Server Error');
   }
 });
+
 
 
 
@@ -209,13 +208,14 @@ router.get('/edit-post/:slug', authMiddleware, async (req, res) => {
 });
 
 
+
 /**
  * Admin - Update Post
  * PUT /edit-post/:slug
  */
 router.put('/edit-post/:slug', authMiddleware, upload.single('headerImage'), async (req, res) => {
   try {
-    const { title, body, categories } = req.body;
+    const { title, body, categories, isFeatured } = req.body;
 
     const categoriesArray = Array.isArray(categories) ? categories : [categories];
     const categoriesString = categoriesArray.join(', ');
@@ -226,6 +226,7 @@ router.put('/edit-post/:slug', authMiddleware, upload.single('headerImage'), asy
       title,
       body,
       categories: categoriesString,
+      isFeatured: isFeatured === 'true',
       updatedAt: Date.now(),
     };
 
@@ -245,6 +246,7 @@ router.put('/edit-post/:slug', authMiddleware, upload.single('headerImage'), asy
     res.status(500).send('Server Error');
   }
 });
+
 
 
 

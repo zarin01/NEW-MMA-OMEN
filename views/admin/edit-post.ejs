@@ -2,13 +2,13 @@
 <div class="admin-title">
   <h2>View / Edit Post</h2>
 
-  <form action="/delete-post/<%= data._id %>?_method=DELETE" method="POST">
+  <form action="/delete-post/<%= data.slug %>?_method=DELETE" method="POST">
     <input type="submit" value="Delete" class="btn-delete btn">
   </form>
 </div>
 
-<form action="/edit-post/<%= data._id %>?_method=PUT" method="POST" enctype="multipart/form-data" onsubmit="return validateForm();"> <!-- Added enctype for file uploads -->
-
+<form action="/edit-post/<%= data.slug %>?_method=PUT" method="POST" enctype="multipart/form-data" onsubmit="return validateForm();"> <!-- Use slug here -->
+  
   <label for="title"><b>Title</b></label>
   <input type="text" placeholder="Post Title" name="title" value="<%= data.title %>" required>
 
@@ -29,12 +29,12 @@
   <!-- Promotions (checkbox group) -->
   <p><b>Choose Promotions:</b></p>
   <div>
-    <label><input type="checkbox" name="categories" value="UFC" <%= data.categories.includes('UFC') ? 'checked' : '' %> /> UFC</label>
+    <label><input type="checkbox" name="categories" value="UFC" <%=  data.categories.includes(/UFC/) ? 'checked' : '' %> /> UFC</label>
     <label><input type="checkbox" name="categories" value="Bellator" <%= data.categories.includes('Bellator') ? 'checked' : '' %> /> Bellator</label>
     <label><input type="checkbox" name="categories" value="ONE Championship" <%= data.categories.includes('ONE Championship') ? 'checked' : '' %> /> ONE Championship</label>
     <label><input type="checkbox" name="categories" value="PFL" <%= data.categories.includes('PFL') ? 'checked' : '' %> /> PFL</label>
   </div>
-
+  <br><br>
   <!-- Combat Sports (checkbox group) -->
   <p><b>Choose Combat Sports:</b></p>
   <div>
@@ -45,36 +45,12 @@
     <label><input type="checkbox" name="categories" value="Wrestling" <%= data.categories.includes('Wrestling') ? 'checked' : '' %> /> Wrestling</label>
     <label><input type="checkbox" name="categories" value="Jiu-Jitsu" <%= data.categories.includes('Jiu-Jitsu') ? 'checked' : '' %> /> Jiu-Jitsu</label>
   </div>
-
+  <br><br>
+  <label>
+    <input type="checkbox" name="isFeatured" value="true" <% if (data.isFeatured) { %> checked <% } %> >
+    Feature this post
+  </label>
+  <br><br>
   <input type="submit" value="Update" class="btn">
 
 </form>
-
-<script src="https://cdn.tiny.cloud/1/5zm60qesc6jws996dbi74dh260hjywix02k6ofi6mpgmm85d/tinymce/6/tinymce.min.js" referrerpolicy="origin"></script>
-<script>
-    // Initialize TinyMCE
-    document.addEventListener("DOMContentLoaded", function () {
-        tinymce.init({
-            selector: 'textarea[name="body"]', // Target the textarea for TinyMCE
-            plugins: 'image link lists table code', // Add the plugins you want
-            toolbar: 'undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | outdent indent | link image | code',
-            menubar: false,
-            height: 300, // Adjust the editor height
-            setup: function (editor) {
-                editor.on('change', function () {
-                    editor.save(); // Update the textarea with the editor content
-                });
-            }
-        });
-    });
-
-    // Form validation function
-    function validateForm() {
-        const bodyContent = tinymce.get('body').getContent();
-        if (!bodyContent.trim()) {
-            alert('Content is required.');
-            return false; // Prevent form submission
-        }
-        return true; // Allow form submission
-    }
-</script>

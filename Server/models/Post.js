@@ -26,6 +26,10 @@ const PostSchema = new Schema({
     type: String,
     required: true
   },
+  isFeatured: {
+    type: Boolean,
+    default: false
+  },
   createdAt: {
     type: Date,
     default: Date.now
