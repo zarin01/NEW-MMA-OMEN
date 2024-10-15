@@ -548,12 +548,6 @@ footer{
   padding: 5px 20px;
 }
 
-.searchBtn svg{
-  position: absolute;
-  top: 20px;
-  right: 120px;
-}
-
 
 /* Pagintation */
 .pagination {
@@ -605,4 +599,121 @@ footer{
 .latest-post .article-list__excerpt, .latest-post .article-list__excerpt strong, .latest-post  p{
   font-size: 14px;
   font-weight: 400;
+}
+
+
+/* Container for the entire comments section */
+.comments-section {
+  width: 80%;
+  margin: 0 auto;
+  background-color: var(--gray-light);
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  font-family: Arial, sans-serif;
+}
+
+/* Section Heading */
+.comments-section h2 {
+  font-size: 1.8rem;
+  color: #333;
+  border-bottom: 2px solid #e0e0e0;
+  padding-bottom: 10px;
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+/* Comments List */
+.comments-list {
+  list-style-type: none;
+  padding: 0;
+  margin-bottom: 30px;
+}
+
+/* Individual Comment */
+.comments-list li {
+  background-color: #ffffff;
+  padding: 15px;
+  margin-bottom: 15px;
+  border-radius: 5px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.comments-list li strong {
+  display: block;
+  font-size: 1.1rem;
+  color: var(--main-teal);
+}
+
+.comments-list li small {
+  display: block;
+  font-size: 0.85rem;
+  color: #888;
+  margin-bottom: 10px;
+}
+
+.comments-list li p {
+  font-size: 1rem;
+  color: #444;
+  margin: 0;
+  line-height: 1.5;
+}
+
+/* Comment Form */
+.comments-section form {
+  background-color: #fff;
+  padding: 20px;
+  border-radius: 5px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.comments-section form div {
+  margin-bottom: 15px;
+}
+
+.comments-section form label {
+  font-size: 1rem;
+  color: #555;
+  margin-bottom: 5px;
+  display: block;
+}
+
+.comments-section form textarea {
+  width: 100%;
+  height: 100px;
+  padding: 10px;
+  font-size: 1rem;
+  border-radius: 5px;
+  border: 1px solid #ddd;
+  resize: vertical;
+}
+
+.comments-section form button {
+  padding: 10px 20px;
+  font-size: 1rem;
+  color: #fff;
+  background-color: var(--gray);
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.comments-section form button:hover {
+  background-color: #0056b3;
+}
+
+/* Responsiveness */
+@media (max-width: 768px) {
+  .comments-section {
+    width: 95%;
+  }
+
+  .comments-section h2 {
+    font-size: 1.5rem;
+  }
+
+  .comments-section form textarea {
+    height: 80px;
+  }
 }

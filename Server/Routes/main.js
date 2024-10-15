@@ -5,10 +5,12 @@ const User = require('../models/User');
 const Comment = require('../models/Comment');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
+const badWords = require('../middleware/removedWordsList');
 
 const jwtSecret = process.env.JWT_SECRET;
 const adminLayout = '../views/layouts/admin';
 const mainLayout = '../views/layouts/main';
+
 
 
 /**
@@ -379,42 +381,36 @@ router.get('/post/:slug/comments', authMiddleware, async (req, res) => {
   }
 });
 
-const badWords = ["badword1", "badword2", "badword3"]; // Add more words as needed
-
-
 const sanitizeComment = (comment) => {
   let sanitizedComment = comment;
 
   badWords.forEach(word => {
-    const regex = new RegExp(`\\b${word}\\b`, 'gi'); // Match whole words, case insensitive
+    const regex = new RegExp(`\\b${word}\\b`, 'gi');
     sanitizedComment = sanitizedComment.replace(regex, '*'.repeat(word.length));
   });
 
   return sanitizedComment;
 };
 
-
 /**
  * POST /
  * Comment
-*/
+ */
 router.post('/post/:slug/comments', authMiddleware, async (req, res) => {
   try {
     const post = await Post.findOne({ slug: req.params.slug });
 
-    // Check if user is logged in
     if (!req.isLoggedIn) {
       return res.status(401).send('You must be logged in to comment.');
     }
 
-    // Sanitize the comment body
     const sanitizedBody = sanitizeComment(req.body.body);
-
+    
     const newComment = new Comment({
       post: post._id,
       author: req.user.username || req.user.email,
-      body: req.body.body, // Save the original body
-      sanitizedBody, // Optionally save the sanitized body if you want to display it directly
+      body: sanitizedBody,
+      sanitizedBody,
       createdAt: Date.now()
     });
 
@@ -426,6 +422,7 @@ router.post('/post/:slug/comments', authMiddleware, async (req, res) => {
     res.status(500).send('Server Error');
   }
 });
+
 
 
 module.exports = router;

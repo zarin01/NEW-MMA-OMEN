@@ -1,13 +1,13 @@
 <section class="comments-section">
-    <h2>Comments for <%= post.title %></h2>
+    <h2><strong>Forum for </strong><br><%= post.title %></h2>
   
     <% if (comments.length > 0) { %>
       <ul class="comments-list">
         <% comments.forEach(comment => { %>
           <li>
             <strong><%= comment.author %></strong>
-            <p><%= comment.sanitizedBody || sanitizeComment(comment.body) %></p> <!-- Use sanitized body for display -->
             <small><%= comment.createdAt.toDateString() %></small>
+            <p><%- comment.body %></p>
           </li>
         <% }) %>
       </ul>
