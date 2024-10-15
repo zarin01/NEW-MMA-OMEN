@@ -7,8 +7,9 @@
     <title>MMA OMEN</title>
 </head>
 <body>
-
-    <!-- Columns Section -->
+  <div class="home">
+    <div class="home-content">
+       <!-- Columns Section -->
     <div class="category-columns">
       <div class="column-first">
         <h2>UFC Posts</h2>
@@ -103,6 +104,72 @@
         <% } %>
     </section>
 
+
+    </div>
+   
+    <aside class="sidebar">
+      <!-- Recent Posts Section -->
+      <div class="sidebar-section">
+        <h3>Recent Posts</h3>
+        <ul class="recent-posts">
+          <% latestPosts.forEach(function(post) { %>
+            <li>
+              <a href="/posts/<%= post.id %>"><%= post.title %></a>
+            </li>
+          <% }); %>
+        </ul>
+      </div>
+    
+      <!-- Sports Section -->
+      <div class="sidebar-section">
+        <h3>Sports</h3>
+        <ul class="sports-list">
+            <li>
+              <a href="">MMA</a>
+            </li>
+            <li>
+              <a href="">BOXING</a>
+            </li>
+            <li>
+              <a href="">BJJ</a>
+            </li>
+            <li>
+              <a href="">KICKBOXING</a>
+            </li>
+            <li>
+              <a href="">MUAY THAI</a>
+            </li>
+            <li>
+              <a href="">GRAPPLING</a>
+            </li>
+        </ul>
+      </div>
+    
+      <!-- Categories Section -->
+      <div class="sidebar-section">
+        <h3>Leagues</h3>
+        <ul class="categories-list">
+            <li>
+              <a href="">UFC</a>
+            </li>
+            <li>
+              <a href="">PFL</a>
+            </li>
+            <li>
+              <a href="">ONE</a>
+            </li>
+            <li>
+              <a href="">UFC</a>
+            </li>
+            <li>
+              <a href="">UFC</a>
+            </li>
+        </ul>
+      </div>
+    </aside>
+    
+  
+  </div>
 
 </body>
 </html>

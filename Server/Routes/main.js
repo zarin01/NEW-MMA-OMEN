@@ -53,8 +53,8 @@ const authMiddleware = async (req, res, next) => {
 router.get('', authMiddleware, async (req, res) => {
   try {
     const locals = {
-      title: "NodeJs Blog",
-      description: "Simple Blog created with NodeJs, Express & MongoDb."
+      title: "MMA OMEN",
+      description: "MMA Omen, MMA blog and media source."
     };
 
     let perPage = 10;
@@ -64,6 +64,7 @@ router.get('', authMiddleware, async (req, res) => {
    
     const ufcPosts = await Post.find({ categories: /UFC/ }).sort({ createdAt: -1 }).limit(5);
     const mmaPosts = await Post.find({ categories: /MMA/ }).sort({ createdAt: -1 }).limit(5);
+
     
 
     const latestPosts = await Post.aggregate([{ $sort: { createdAt: -1 } }])

@@ -23,6 +23,11 @@ body {
   margin: 0;
 }
 
+.home{
+  display: flex;
+  flex-direction: row;
+}
+
 a { color: var(--gray-light); }
 h1 { font-size: var(--font-size-xl); }
 h2 { font-size: var(--font-size-lg); }
