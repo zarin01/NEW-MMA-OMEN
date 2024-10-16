@@ -189,6 +189,10 @@ router.get('/post/:slug', authMiddleware, async (req, res) => {
 
     const data = await Post.findOne({ slug: slug });
 
+    let perPage = 10;
+    let page = req.query.page || 1;
+
+
     if (!data) {
       return res.status(404).send('Post not found');
     }
@@ -198,10 +202,16 @@ router.get('/post/:slug', authMiddleware, async (req, res) => {
       description: "Simple Blog created with NodeJs, Express & MongoDb.",
     };
 
+    const latestPosts = await Post.aggregate([{ $sort: { createdAt: -1 } }])
+      .skip(perPage * page - perPage)
+      .limit(perPage)
+      .exec();
+
     const PageLayout = req.isLoggedIn ? adminLayout : mainLayout;
 
     res.render('post', { 
       locals,
+      latestPosts,
       data,
       layout: PageLayout,
       currentRoute: `/post/${slug}`,
@@ -471,5 +481,62 @@ router.post('/contact', authMiddleware, async (req, res) => {
     res.status(500).send('Server Error');
   }
 });
+
+
+/**
+ * GET /
+ * Forums
+*/
+router.get('/forum', authMiddleware, async (req, res) => {
+  try {
+    const PageLayout = req.isLoggedIn ? adminLayout : mainLayout;
+    const posts = await Post.find({})
+      .select('slug title commentCount likeCount dislikeCount')
+      .exec();
+
+    res.render('forum', { 
+      posts, 
+      currentRoute: '/forum',
+      layout: PageLayout
+    });
+  } catch (err) {
+    console.error(err);
+    res.status(500).send('Server Error');
+  }
+});
+
+
+
+router.post('/like/:postId', authMiddleware, async (req, res) => {
+  try {
+    const postId = req.params.postId;
+    const post = await Post.findById(postId);
+
+    post.likeCount += 1;
+    await post.save();
+    
+    res.json({ success: true, likeCount: post.likeCount });
+  } catch (err) {
+    console.error(err);
+    res.status(500).send('Server Error');
+  }
+});
+
+router.post('/dislike/:postId', authMiddleware, async (req, res) => {
+  try {
+    const postId = req.params.postId;
+    const post = await Post.findById(postId);
+
+    post.dislikeCount += 1;
+    await post.save();
+    
+    res.json({ success: true, dislikeCount: post.dislikeCount });
+  } catch (err) {
+    console.error(err);
+    res.status(500).send('Server Error');
+  }
+});
+
+
 
 module.exports = router;

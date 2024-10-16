@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Forum</title>
+  <link rel="stylesheet" href="/styles/forum.css"> <!-- Include your forum-specific styles -->
+</head>
+<body>
+  <!-- Navigation Bar Example -->
+  <nav>
+    <ul>
+      <li class="<%= currentRoute === '/forum' ? 'active' : '' %>"><a href="/forum">Forum</a></li>
+      <!-- Add other navigation links if needed -->
+    </ul>
+  </nav>
+
+  <div class="forum-container">
+    <h1>Active Forums</h1>
+
+    <% if (posts.length > 0) { %>
+      <% posts.forEach(post => { %>
+        <div class="forum-item">
+          <h3><%= post.title %></h3>
+          <!-- Create link to comments section by appending /comments to the post's slug -->
+          <a href="/post/<%= post.slug %>/comments" class="comments-link">View or Add Comments</a>
+          
+          <div class="forum-activity">
+            <span>Comments: <%= post.commentCount || 0 %></span>
+            <div class="like-dislike">
+              <button class="like-button" data-post-id="<%= post._id %>">Like (<%= post.likeCount || 0 %>)</button>
+              <button class="dislike-button" data-post-id="<%= post._id %>">Dislike (<%= post.dislikeCount || 0 %>)</button>
+            </div>
+          </div>
+        </div>
+      <% }); %>
+    <% } else { %>
+      <p>No forums available at the moment.</p>
+    <% } %>
+  </div>
+
+  <script src="/scripts/forum.js"></script> <!-- Include your JS script for like/dislike buttons -->
+</body>
+</html>
