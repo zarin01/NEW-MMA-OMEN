@@ -1,24 +1,36 @@
 document.querySelectorAll('.like-button').forEach(button => {
-  button.addEventListener('click', () => {
-    const postId = button.getAttribute('data-post-id');
-    fetch(`/like/${postId}`, { method: 'POST' })
+  button.addEventListener('click', function() {
+    const postId = this.getAttribute('data-post-id');
+    fetch(`/post/${postId}/like`, { method: 'POST' })
       .then(response => response.json())
       .then(data => {
         if (data.success) {
-          button.innerHTML = `Like (${data.likeCount})`;
+          this.textContent = `Like (${data.likeCount})`;
+          const dislikeButton = this.nextElementSibling;
+          dislikeButton.textContent = `Dislike (${data.dislikeCount})`;
+
+          // Disable the like button, enable the dislike button
+          this.disabled = true;
+          dislikeButton.disabled = false;
         }
       });
   });
 });
 
 document.querySelectorAll('.dislike-button').forEach(button => {
-  button.addEventListener('click', () => {
-    const postId = button.getAttribute('data-post-id');
-    fetch(`/dislike/${postId}`, { method: 'POST' })
+  button.addEventListener('click', function() {
+    const postId = this.getAttribute('data-post-id');
+    fetch(`/post/${postId}/dislike`, { method: 'POST' })
       .then(response => response.json())
       .then(data => {
         if (data.success) {
-          button.innerHTML = `Dislike (${data.dislikeCount})`;
+          this.textContent = `Dislike (${data.dislikeCount})`;
+          const likeButton = this.previousElementSibling;
+          likeButton.textContent = `Like (${data.likeCount})`;
+
+          // Disable the dislike button, enable the like button
+          this.disabled = true;
+          likeButton.disabled = false;
         }
       });
   });

@@ -50,23 +50,32 @@ const authMiddleware = async (req, res, next) => {
  */
 router.get('/dashboard', authMiddleware, async (req, res) => {
   try {
+    console.log(req.user); // Check if req.user is being set correctly
+
     const locals = {
       title: 'Dashboard',
       description: 'Simple Blog created with NodeJs, Express & MongoDb.'
     };
+
+    const isAdmin = req.user && req.user.role === 'admin'; 
 
     const data = await Post.find();
     res.render('admin/dashboard', {
       locals,
       data,
       currentRoute: '/dashboard',
-      layout: adminLayout
+      layout: adminLayout,
+      isAdmin,
+      user: req.user // Pass the user object to the template
     });
 
   } catch (error) {
     console.log(error);
+    res.status(500).send('Server Error'); // Handle errors more gracefully
   }
 });
+
+
 
 /**
  * Admin - Create New Post

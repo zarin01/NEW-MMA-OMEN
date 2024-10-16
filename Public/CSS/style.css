@@ -296,6 +296,7 @@ img {
 
 .post-overlay {
   position: relative;
+  height: 100%;
 }
 
 .overlay-text {
@@ -303,7 +304,7 @@ img {
   bottom: 0;
   left: 0;
   right: 0;
-  background: rgba(0, 0, 0, 0.6); /* Semi-transparent background for contrast */
+  background: rgba(0, 0, 0, 0.6);
   color: white;
   padding: 10px;
   text-align: center;
@@ -880,12 +881,66 @@ footer{
 
 /* Forum */
 .forum-container {
-  max-width: 800px;
-  margin: 0 auto;
   padding: 20px;
 }
 
+.forum-content{
+  width: 70%;
+  flex: 1;
+}
+
+.like-dislike {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.like-button, .dislike-button {
+  background-color: #f0f0f0;
+  border: 1px solid #ddd;
+  color: #333;
+  font-size: 16px;
+  padding: 8px 16px;
+  margin-left: 10px;
+  border-radius: 5px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  transition: background-color 0.3s, color 0.3s;
+}
+
+.like-button i, .dislike-button i {
+  margin-right: 5px;
+}
+
+.like-button:hover {
+  background-color: #007bff;
+  color: white;
+}
+
+.dislike-button:hover {
+  background-color: #dc3545;
+  color: white;
+}
+
+.like-button:disabled, .dislike-button:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+}
+
+.like-button:disabled:hover, .dislike-button:disabled:hover {
+  background-color: #ccc; /* Keeps disabled buttons from changing on hover */
+  color: #666;
+}
+
+.like-dislike button span {
+  margin-left: 5px;
+}
+
+
 .forum-item {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
   border-bottom: 1px solid #ddd;
   padding: 10px 0;
 }

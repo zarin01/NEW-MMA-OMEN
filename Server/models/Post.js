@@ -30,6 +30,22 @@ const PostSchema = new Schema({
     type: Boolean,
     default: false
   },
+  likeCount: {
+    type: Number,
+    default: 0,
+  },
+  dislikeCount: {
+    type: Number,
+    default: 0,
+  },
+  likedBy: [{ 
+    type: Schema.Types.ObjectId, 
+    ref: 'User' 
+  }],
+  dislikedBy: [{ 
+    type: Schema.Types.ObjectId, 
+    ref: 'User' 
+  }],
   createdAt: {
     type: Date,
     default: Date.now

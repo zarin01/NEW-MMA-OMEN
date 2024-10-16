@@ -1,29 +1,29 @@
 <div class="admin-title">
-  <h2>Posts</h2>
-  <a href="/add-post" class="button">+ Add New</a>
+  <% if (isAdmin) { %>
+    <h2>Posts</h2>
+    <a href="/add-post" class="button">+ Add New</a>
+  <% } else { %>
+    <h2>User Information</h2>
+    <p>Welcome, <%= user %>! Here’s your information:</p>
+    <!-- Display user info -->
+
+  <% } %>
 </div>
 
-<ul class="admin-posts">
-
-  <% data.forEach(post => { %>
-   
-    <li>
-      <!-- Use the slug instead of _id for the post link -->
-      <a href="/post/<%= post.slug %>">
-        <%= post.title %> &nearr;
-      </a>
-      <div class="admin-post-controls">
-        <!-- Use the slug for the edit link -->
-        <a href="/edit-post/<%= post.slug %>" class="btn">Edit</a>
-
-        <!-- Use the slug for the delete form action -->
-        <form action="/delete-post/<%= post.slug %>?_method=DELETE" method="POST">
-          <input type="submit" value="Delete" class="btn-delete btn">
-        </form>
-
-      </div>
-
-    </li>
-
-  <% }) %>
-</ul>
+<% if (isAdmin) { %>
+  <ul class="admin-posts">
+    <% data.forEach(post => { %>
+      <li>
+        <a href="/post/<%= post.slug %>">
+          <%= post.title %> &nearr;
+        </a>
+        <div class="admin-post-controls">
+          <a href="/edit-post/<%= post.slug %>" class="btn">Edit</a>
+          <form action="/delete-post/<%= post.slug %>?_method=DELETE" method="POST">
+            <input type="submit" value="Delete" class="btn-delete btn">
+          </form>
+        </div>
+      </li>
+    <% }) %>
+  </ul>
+<% } %>

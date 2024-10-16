@@ -507,35 +507,69 @@ router.get('/forum', authMiddleware, async (req, res) => {
 
 
 
-router.post('/like/:postId', authMiddleware, async (req, res) => {
+// Like a post
+router.post('/post/:id/like', authMiddleware, async (req, res) => {
   try {
-    const postId = req.params.postId;
-    const post = await Post.findById(postId);
+    const post = await Post.findById(req.params.id);
+    const userId = req.user.id;
 
-    post.likeCount += 1;
+    // If the user has already disliked the post, remove the dislike and add a like
+    if (post.dislikedBy.includes(userId)) {
+      post.dislikeCount -= 1;
+      post.dislikedBy.pull(userId); // Remove user from dislikedBy array
+    }
+
+    // If the user has already liked the post, undo the like
+    if (post.likedBy.includes(userId)) {
+      post.likeCount -= 1;
+      post.likedBy.pull(userId); // Remove user from likedBy array
+    } else {
+      // Add like
+      post.likeCount += 1;
+      post.likedBy.push(userId); // Add user to likedBy array
+    }
+
     await post.save();
-    
-    res.json({ success: true, likeCount: post.likeCount });
+    res.json({ success: true, likeCount: post.likeCount, dislikeCount: post.dislikeCount });
   } catch (err) {
     console.error(err);
     res.status(500).send('Server Error');
   }
 });
 
-router.post('/dislike/:postId', authMiddleware, async (req, res) => {
+// Dislike a post
+router.post('/post/:id/dislike', authMiddleware, async (req, res) => {
   try {
-    const postId = req.params.postId;
-    const post = await Post.findById(postId);
+    const post = await Post.findById(req.params.id);
+    const userId = req.user.id;
 
-    post.dislikeCount += 1;
+    // If the user has already liked the post, remove the like and add a dislike
+    if (post.likedBy.includes(userId)) {
+      post.likeCount -= 1;
+      post.likedBy.pull(userId); // Remove user from likedBy array
+    }
+
+    // If the user has already disliked the post, undo the dislike
+    if (post.dislikedBy.includes(userId)) {
+      post.dislikeCount -= 1;
+      post.dislikedBy.pull(userId); // Remove user from dislikedBy array
+    } else {
+      // Add dislike
+      post.dislikeCount += 1;
+      post.dislikedBy.push(userId); // Add user to dislikedBy array
+    }
+
     await post.save();
-    
-    res.json({ success: true, dislikeCount: post.dislikeCount });
+    res.json({ success: true, likeCount: post.likeCount, dislikeCount: post.dislikeCount });
   } catch (err) {
     console.error(err);
     res.status(500).send('Server Error');
   }
 });
+
+
+
+
 
 
 
