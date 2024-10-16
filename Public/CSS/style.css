@@ -1,4 +1,5 @@
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@200;300;400;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Agdasima:wght@400;700&display=swap');
 
 :root {
   --black: #1c1c1c;
@@ -32,10 +33,30 @@ body {
   flex-direction: row;
 }
 
-a { color: var(--gray-light); }
-h1 { font-size: var(--font-size-xl); }
-h2 { font-size: var(--font-size-lg); }
-h3 { font-size: var(--font-size-md); }
+a { color: var(--highlight-text);
+    font-family: "Agdasima",
+    sans-serif; 
+  }
+
+h1 { 
+  font-size: var(--font-size-xl);
+  font-family: "Agdasima",
+  sans-serif; 
+  color: var(--highlight-heading);
+}
+
+h2 { 
+  font-size: var(--font-size-lg);
+  font-family: "Agdasima",
+  sans-serif;
+  color: var(--highlight-heading);
+}
+h3 {
+  font-size: var(--font-size-md);
+  font-family: "Agdasima",
+  sans-serif; 
+  color: var(--highlight-heading);
+}
 
 input[type="text"],
 input[type="email"],
@@ -115,10 +136,10 @@ img {
 
 .header__logo {
   font-weight: 800;
-  font-size: 25px;
+  font-size: 45px;
   text-decoration: none;
   grid-area: logo;
-  color: var(--main-teal);
+  color: var(--highlight-heading);
 }
 
 .header__logo:hover {
@@ -151,9 +172,9 @@ img {
   background: none;
   border-radius: 10px;
   border: 2px solid transparent;
-  font-size: 1rem;
+  font-size: 1.2rem;
   font-weight: 600;
-  color: var(--gray);
+  color: var(--highlight-text);
 }
 
 .header__button button:hover {
@@ -321,6 +342,7 @@ img {
   background-color: var(--secondary-color);
   font-weight: bold;
   margin: 0;
+  border: 1px solid var(--gray);
 }
 
 .article-ul {
@@ -614,6 +636,9 @@ footer{
 .latest-post .article-item{
   display: flex;
   flex-direction: row;
+  background-color: var(--secondary-color);
+  border-radius: 5px;
+  border: 1px solid var(--gray);
 }
 
 .latest-post .article-list__excerpt{
@@ -812,7 +837,8 @@ footer{
   width: 300px;
   padding: 20px;
   background-color: var(--secondary-color);
-  border: 1px solid #ddd;
+  border: 1px solid var(--gray);
+  border-radius: 5px;
 }
 .sidebar-section {
   margin-bottom: 20px;
@@ -820,7 +846,6 @@ footer{
 .sidebar-section h3 {
   font-size: 1.5em;
   margin-bottom: 10px;
-  color: var(--main-yellow);
 }
 .sidebar-section ul {
   list-style-type: none;
