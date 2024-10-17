@@ -608,6 +608,51 @@ router.get('/dashboard', authMiddleware,  async (req, res) => {
 
 
 
+/**
+ * Sports Category Page
+ * GET /sports/:category
+ */
+router.get('/sports/:category', async (req, res) => {
+  const category = req.params.category;
+
+  try {
+    const posts = await Post.find({ category: category });
+
+    res.render('sports', {
+      posts,
+      category,
+      currentRoute: '/sports/:category',
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).send('Server Error');
+  }
+});
+
+
+
+
+/**
+ * League Page
+ * GET /league/:league
+ */
+router.get('/league/:league', async (req, res) => {
+  const league = req.params.league;
+
+  try {
+    const posts = await Post.find({ league: league });
+
+    res.render('league', {
+      posts,
+      league,
+      currentRoute: '/sports/:league',
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).send('Server Error');
+  }
+});
+
 
 
 module.exports = router;

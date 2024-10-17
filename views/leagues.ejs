@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title><%= league %> League Posts</title>
+  <link rel="stylesheet" href="/styles/league.css">
+</head>
+<body>
+  <header>
+    <h1><%= league %> League</h1>
+  </header>
+
+  <section class="posts-container">
+    <% if (posts.length > 0) { %>
+      <% posts.forEach(post => { %>
+        <article class="post">
+          <h2><%= post.title %></h2>
+          <p><%= post.content.substring(0, 200) %>...</p>
+          <a href="/post/<%= post._id %>">Read More</a>
+        </article>
+      <% }) %>
+    <% } else { %>
+      <p>No posts found for this league.</p>
+    <% } %>
+  </section>
+</body>
+</html>
