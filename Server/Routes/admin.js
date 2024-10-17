@@ -144,6 +144,10 @@ router.post('/add-post', upload.single('headerImage'), async (req, res) => {
       isFeatured: isFeatured === 'true',
       createdAt: new Date(),
       updatedAt: new Date(),
+      metaTitle,
+      metaDescription,
+      keywords: keywords.split(',').map(k => k.trim()),
+      ogImage: req.file ? req.file.path : null
     });
 
     await newPost.save();
@@ -178,7 +182,8 @@ router.get('/edit-post/:slug', authMiddleware, async (req, res) => {
       locals,
       data,
       currentRoute: `/edit-post/${req.params.slug}`,
-      layout: adminLayout
+      layout: adminLayout,
+      
     });
   } catch (error) {
     console.error(error);
@@ -194,7 +199,7 @@ router.get('/edit-post/:slug', authMiddleware, async (req, res) => {
  */
 router.put('/edit-post/:slug', authMiddleware, upload.single('headerImage'), async (req, res) => {
   try {
-    const { title, body, categories, isFeatured } = req.body;
+    const { title, body, categories, isFeatured, metaTitle, metaDescription, keywords, ogImage  } = req.body;
 
     const categoriesArray = Array.isArray(categories) ? categories : [categories];
     const categoriesString = categoriesArray.join(', ');
@@ -207,6 +212,10 @@ router.put('/edit-post/:slug', authMiddleware, upload.single('headerImage'), asy
       categories: categoriesString,
       isFeatured: isFeatured === 'true',
       updatedAt: Date.now(),
+      metaTitle,
+      metaDescription,
+      keywords: keywords.split(',').map(k => k.trim()),
+      ogImage: req.file ? req.file.path : undefined
     };
 
     if (headerImage) {

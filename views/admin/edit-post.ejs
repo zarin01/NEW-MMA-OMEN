@@ -26,6 +26,23 @@
 
   <label for="categories"><b>Categories</b></label>
 
+    
+  <label for="metaTitle"><b>Meta Title</b></label>
+  <input type="text" name="metaTitle" value="<%= data.metaTitle %>" required>
+
+  <label for="metaDescription"><b>Meta Description</b></label>
+  <textarea name="metaDescription" required><%= data.metaDescription %></textarea>
+
+  <label for="keywords"><b>Keywords</b></label>
+  <input type="text" name="keywords" value="<%= data.keywords.join(', ') %>">
+
+  <label for="ogImage"><b>Open Graph Image</b></label>
+  <input type="file" name="ogImage">
+  <% if (data.ogImage) { %>
+    <img src="<%= data.ogImage %>" alt="OG Image" style="max-width: 200px; height: auto;">
+  <% } %>
+
+
   <!-- Promotions (checkbox group) -->
   <p><b>Choose Promotions:</b></p>
   <div>

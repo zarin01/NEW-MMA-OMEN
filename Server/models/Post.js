@@ -26,6 +26,10 @@ const PostSchema = new Schema({
     type: String,
     required: true
   },
+  ImageAlt: {
+    type: String,
+    required: true
+  },
   isFeatured: {
     type: Boolean,
     default: false
@@ -53,7 +57,28 @@ const PostSchema = new Schema({
   updatedAt: {
     type: Date,
     default: Date.now
-  }
+  },
+  keywords: [{
+    type: String
+  }], 
+  metaDescription: {
+    type: String,
+    required: true
+  },
+  metaTitle: {
+    type: String,
+    required: true
+  }, 
+  readTime: {
+    type: Number
+  },
+  lastModified: {
+    type: Date,
+    default: Date.now
+  },
+  ogTitle: { type: String, default: function() { return this.metaTitle; } },
+  ogDescription: { type: String, default: function() { return this.metaDescription; } },
+  ogImage: { type: String, default: function() { return this.headerImage; } }
 });
 
 module.exports = mongoose.model('Post', PostSchema);

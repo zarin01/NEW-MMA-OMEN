@@ -1,3 +1,21 @@
+<head>
+  <title><%= data.metaTitle %></title>
+  <meta name="description" content="<%= data.metaDescription %>">
+  <meta name="keywords" content="<%= data.keywords.join(', ') %>">
+  
+  <!-- Open Graph (OG) meta tags for better social media sharing -->
+  <meta property="og:title" content="<%= data.ogTitle || data.metaTitle %>">
+  <meta property="og:description" content="<%= data.ogDescription || data.metaDescription %>">
+  <meta property="og:image" content="<%= data.ogImage || data.headerImage %>">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="<%= 'https://yourwebsite.com/post/' + data.slug %>">
+
+  <!-- Twitter Card meta tags -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="<%= data.ogTitle || data.metaTitle %>">
+  <meta name="twitter:description" content="<%= data.ogDescription || data.metaDescription %>">
+  <meta name="twitter:image" content="<%= data.ogImage || data.headerImage %>">
+</head>
 
 <div class="post-page">
   <div class="post-content">
@@ -12,6 +30,12 @@
 
       <div class="post-meta">
         <p><strong><%= data.author %></strong> | <strong><%= new Date(data.createdAt).toLocaleDateString() %></strong> | <strong><%= data.categories.join(', ') %></strong></p>
+        <div class="social-links">
+          <a href="https://youtube.com/your-channel" target="_blank" rel="noopener noreferrer">YouTube</a> | 
+          <a href="https://instagram.com/your-profile" target="_blank" rel="noopener noreferrer">Instagram</a> | 
+          <a href="https://x.com/your-profile" target="_blank" rel="noopener noreferrer">X (Twitter)</a> | 
+          <a href="https://tiktok.com/@your-profile" target="_blank" rel="noopener noreferrer">TikTok</a>
+        </div>
       </div>
     </div>
     
@@ -85,3 +109,38 @@
     </aside>
   </div>
 </div>
+<script>
+  app.get('/post/:slug', (req, res) => {
+  Post.findOne({ slug: req.params.slug })
+    .then(post => {
+      if (!post) return res.status(404).send('Post not found');
+      
+      // Get the latest posts for the sidebar
+      Post.find().sort({ createdAt: -1 }).limit(5)
+        .then(latestPosts => {
+          res.render('post', { 
+            data: post, 
+            latestPosts 
+          });
+        });
+    })
+    .catch(err => console.log(err));
+});
+app.get('/post/:slug', (req, res) => {
+  Post.findOne({ slug: req.params.slug })
+    .then(post => {
+      if (!post) return res.status(404).send('Post not found');
+      
+      // Get the latest posts for the sidebar
+      Post.find().sort({ createdAt: -1 }).limit(5)
+        .then(latestPosts => {
+          res.render('post', { 
+            data: post, 
+            latestPosts 
+          });
+        });
+    })
+    .catch(err => console.log(err));
+});
+
+</script>
