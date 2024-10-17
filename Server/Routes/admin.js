@@ -48,9 +48,9 @@ const authMiddleware = async (req, res, next) => {
  * Admin Dashboard
  * GET /dashboard
  */
-router.get('/dashboard', authMiddleware, async (req, res) => {
+router.get('/dashboard', async (req, res) => {
   try {
-    console.log(req.user); // Check if req.user is being set correctly
+    const user = await User.findById(req.userId);
 
     const locals = {
       title: 'Dashboard',
@@ -65,13 +65,13 @@ router.get('/dashboard', authMiddleware, async (req, res) => {
       data,
       currentRoute: '/dashboard',
       layout: adminLayout,
-      isAdmin,
-      user: req.user // Pass the user object to the template
+      isAdmin: authMiddleware,
+      user: user
     });
 
   } catch (error) {
     console.log(error);
-    res.status(500).send('Server Error'); // Handle errors more gracefully
+    res.status(500).send('Server Error');
   }
 });
 
