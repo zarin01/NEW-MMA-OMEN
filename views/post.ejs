@@ -1,20 +1,27 @@
 
 <div class="post-page">
   <div class="post-content">
+    
     <div class="post-image" style="width: 100%; text-align: center; margin: 20px 0;">
       <% if (data.headerImage) { %>
         <img src="<%= data.headerImage %>" alt="Header Image" style="width: 100%; max-width: 1200px; height: auto;" />
       <% } %>
     </div>
-    <h1 class="post-title"><%= data.title %></h1>
+    <div class="post-info">
+      <h1 class="post-title"><%= data.title %></h1>
 
-    <div class="post-meta">
-      <p><strong><%= data.author %></strong> | <strong><%= new Date(data.createdAt).toLocaleDateString() %></strong> | <strong><%= data.categories.join(', ') %></strong></p>
+      <div class="post-meta">
+        <p><strong><%= data.author %></strong> | <strong><%= new Date(data.createdAt).toLocaleDateString() %></strong> | <strong><%= data.categories.join(', ') %></strong></p>
+      </div>
     </div>
+    
     <article class="article">
       <p> <%- data.body %></p>
             <!-- Comments link -->
-      <a href="/post/<%= data.slug %>/comments" class="comments-link">View or Add Comments</a>
+      <div class="comment-section">
+        <a href="/post/<%= data.slug %>/comments" class="comments-link">View or Add Comments</a>
+      </div>
+      
     </article>
   </div>
     <aside class="sidebar">
@@ -24,7 +31,7 @@
         <ul class="recent-posts">
           <% latestPosts.forEach(function(post) { %>
             <li>
-              <a href="/posts/<%= post.id %>"><%= post.title %></a>
+              <a href="/post/<%= post.slug %>"><%= post.title %></a>
             </li>
           <% }); %>
         </ul>

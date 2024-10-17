@@ -5,7 +5,7 @@
       <ul class="recent-posts">
         <% recentPosts.forEach(function(post) { %>
           <li>
-            <a href="/posts/<%= post.id %>"><%= post.title %></a>
+            <a href="/post/<%= post.slug %>"><%= post.title %></a>
           </li>
         <% }); %>
       </ul>

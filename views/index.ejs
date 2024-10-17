@@ -95,7 +95,8 @@
             <a href="/?page=<%= nextPage %>" class="pagination">&lt; View Older Posts</a>
         <% } %>
     </section>
-
+    </strong>
+    </strong>
 
     </div>
    
@@ -106,7 +107,7 @@
         <ul class="recent-posts">
           <% latestPosts.forEach(function(post) { %>
             <li>
-              <a href="/posts/<%= post.id %>"><%= post.title %></a>
+              <a href="/post/<%= post.slug %>"><%= post.title %></a>
             </li>
           <% }); %>
         </ul>

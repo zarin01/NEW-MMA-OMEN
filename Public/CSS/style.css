@@ -1,5 +1,6 @@
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@200;300;400;600;700&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Agdasima:wght@400;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=PT+Sans:ital,wght@0,400;0,700;1,400;1,700&display=swap');
 
 :root {
   --black: #1c1c1c;
@@ -18,10 +19,13 @@
   --font-size-lg: clamp(1.56rem, 1vw + 1.31rem, 2.11rem);
   --font-size-xl: clamp(2.44rem, 2.38vw + 1.85rem, 3.75rem);
   --border-radius: 10px;
+  --object-border: #76ABAE 3px solid;
+  --ptSanes:  "PT Sans", sans-serif;
+  --agdasimaFont: "Agdasima", sans-serif;
 }
 
 body {
-  font-family: 'Poppins', sans-serif;
+  font-family: var(--ptSanes);
   color: var(--gray);
   font-size: var(--font-size-base);
   background-color: var(--background);
@@ -31,31 +35,34 @@ body {
 .home{
   display: flex;
   flex-direction: row;
+  gap: 10px;
+  padding-top: 10px;
 }
 
 a { color: var(--highlight-text);
-    font-family: "Agdasima",
-    sans-serif; 
+    font-family: "Agdasima";
+    font-size: 20px;
   }
 
 h1 { 
   font-size: var(--font-size-xl);
-  font-family: "Agdasima",
-  sans-serif; 
+  font-family: "Agdasima", sans-serif;
   color: var(--highlight-heading);
 }
 
 h2 { 
   font-size: var(--font-size-lg);
-  font-family: "Agdasima",
-  sans-serif;
+  font-family: "Agdasima", sans-serif;
   color: var(--highlight-heading);
 }
 h3 {
   font-size: var(--font-size-md);
-  font-family: "Agdasima",
-  sans-serif; 
+  font-family: "Agdasima", sans-serif;
   color: var(--highlight-heading);
+}
+
+strong{
+  font-family: "Agdasima", sans-serif;
 }
 
 input[type="text"],
@@ -64,7 +71,7 @@ input[type="password"],
 input[type="search"],
 select,
 textarea {
-  font-family: 'Poppins', sans-serif;
+  font-family: var(--ptSanes);
   font-size: 1rem;
   display: block;
   box-sizing: border-box;
@@ -102,23 +109,62 @@ img {
 }
 
 .container main{
-  background-color: var(--secondary-color);
   border-radius: 10px;
 }
 
 .container .post-image{
   border-top-left-radius: 10px;
   border-top-right-radius: 10px;
+  border-radius: var(--border-radius);
+}
+
+.post-info {
+  padding-bottom: 10px;
+  border-bottom: var(--gray) 2px solid;
+}
+
+.container .post-image img {
+  border-radius: var(--border-radius);
 }
 
 .post-page {
   display: flex;
   flex-direction: row;
+  gap: 10px;
 }
 
+.post-page .post-content{
+  width: 80%;
+  border: var(--object-border) !important;
+  background-color: var(--secondary-color);
+  border-radius: var(--border-radius);
+}
+
+.post-page .post-image{
+  margin: 0 !important;
+}
+
+.post-page .comment-section{
+  border-top: #76ABAE 2px solid;
+  text-align: center;
+  font-size: 25px;
+  text-transform: capitalize;
+}
+
+.post-page .comment-section a{
+  text-align: center;
+  font-size: 25px;
+  font-weight: bold;
+  color: var(--highlight-heading);
+  text-transform: uppercase;
+}
 .container main article{
-  padding: 10px 20px;
   color: var(--highlight-text);
+  background-color: var(--secondary-color);
+}
+
+.post-page article p, .post-page article iframe, .post-page article strong, .post-page article h1, .post-page article h2, .post-page article h3{
+  padding: 0px 20px;
 }
 
 /* Hero Section */
@@ -156,6 +202,10 @@ img {
   text-decoration: none;
   grid-area: logo;
   color: var(--highlight-heading);
+  text-transform: uppercase;
+  text-align: center;
+  line-height: 40px;
+
 }
 
 .header__logo:hover {
@@ -188,9 +238,12 @@ img {
   background: none;
   border-radius: 10px;
   border: 2px solid transparent;
-  font-size: 1.2rem;
+  font-size: 20px;
   font-weight: 600;
   color: var(--highlight-text);
+  text-transform: uppercase;
+  text-decoration: none;
+  
 }
 
 .header__button button:hover {
@@ -226,16 +279,21 @@ img {
   flex-direction: row;
 }
 
+.home-content{
+  width: 80%;
+  border-radius: var(--border-radius);
+}
+
 .featured-post{
   position: relative;
   display: inline-block;
   width: 50%;
+  border: var(--object-border) !important;
 }
 
 .featured-image {
   width: 100%;
-  height: auto;
-  border: var(--highlight-heading) 3px solid;
+  height: 100%;
 }
 
 .overlay-text {
@@ -273,6 +331,7 @@ img {
 .category-columns {
   display: flex;
   justify-content: center;
+  max-height: 250px;
 }
 
 .three-column-grid {
@@ -286,12 +345,12 @@ img {
 .post-split {
   position: relative;
   overflow: hidden;
+  border: var(--object-border) !important;
 }
 
 .grid-image {
   width: 100%;
-  height: auto;
-  border: var(--highlight-heading) 3px solid;
+  height: 100%;
 }
 
 .post-overlay {
@@ -340,6 +399,7 @@ img {
 .author__heading {
   margin-top: 10px;
   margin-bottom: 5px;
+ 
 }
 
 .author__body {
@@ -350,15 +410,16 @@ img {
 
 /* Home Article List */
 .articles__heading {
-  font-weight: 400;
-  text-align: left;
-  padding: 10px;
-  font-size: var(--font-size-lg);
-  color: var(--highlight-heading);
+  font-size: 2em;
+  margin-bottom: 10px;
+  text-transform: uppercase;
+  text-align: center;
+  padding: 20px;
   background-color: var(--secondary-color);
   font-weight: bold;
   margin: 0;
-  border: 1px solid var(--gray);
+  border: var(--object-border);
+  border-radius: var(--border-radius);
 }
 
 .article-ul {
@@ -429,10 +490,20 @@ footer{
   width: 50%;
   margin: 0 auto;
   color: var(--gray-light);
-  background-color: var(--gray);
+  background-color: var(--secondary-color);
   padding: 40px;
-  border-radius: 12px;
+  border: var(--object-border);
+  border-radius: var(--border-radius);
   box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.log-in label{
+  padding: 15px;
+  text-align: center;
+  width: 100%;
+  text-transform: uppercase;
+  font-size: 20px;
+  color: var(--highlight-heading);
 }
 
 .log-in a {
@@ -462,6 +533,7 @@ footer{
   width: 100%;
   padding: 15px;
   margin-bottom: 30px;
+  margin-top: 10px;
   border: 1px solid var(--gray-light);
   border-radius: 8px;
   font-size: 16px;
@@ -506,11 +578,21 @@ footer{
   width: 50%;
   margin: 0 auto;
   color: var(--gray-light);
-  background-color: var(--gray);
+  background-color: var(--secondary-color);
   padding: 40px;
-  border-radius: 12px;
+  border: var(--object-border);
+  border-radius: var(--border-radius);
   box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
 }
+.register-form label{
+  padding: 15px;
+text-align: center;
+width: 100%;
+text-transform: uppercase;
+font-size: 20px;
+color: var(--highlight-heading);
+}
+
 
 .register-form a {
   background-color: var(--gray);
@@ -624,6 +706,11 @@ footer{
   padding: 5px 20px;
 }
 
+#searchInput::placeholder{
+  text-transform: uppercase;
+  font-family: "Agdasima", sans-serif;
+}
+
 
 /* Pagintation */
 .pagination {
@@ -654,7 +741,7 @@ footer{
   flex-direction: row;
   background-color: var(--secondary-color);
   border-radius: 5px;
-  border: 1px solid var(--gray);
+  border: var(--object-border);
 }
 
 .latest-post .article-list__excerpt{
@@ -671,14 +758,15 @@ footer{
 }
 
 .latest-post h3{
-  font-size: 18px;
-  font-weight: bold;
+  font-size: 30px;
+  font-weight: 600 !important;
   color: var(--highlight-heading);
 }
 
 .latest-post .article-list__excerpt, .latest-post .article-list__excerpt strong, .latest-post  p{
-  font-size: 14px;
+  font-size: 12px;
   font-weight: 400;
+  color: var(--highlight-text);
 }
 
 
@@ -850,28 +938,57 @@ footer{
 
 /* Sidebar */
 .sidebar {
-  width: 300px;
+  width:  25%;
   padding: 20px;
+  height: 100%;
+  border: var(--object-border);
   background-color: var(--secondary-color);
-  border: 1px solid var(--gray);
   border-radius: 5px;
 }
 .sidebar-section {
   margin-bottom: 20px;
 }
 .sidebar-section h3 {
-  font-size: 1.5em;
+  font-size: 2em;
   margin-bottom: 10px;
+  text-transform: uppercase;
+  text-align: center;
 }
 .sidebar-section ul {
   list-style-type: none;
   padding: 0;
 }
+
+.sidebar-section .recent-posts li{
+  border-bottom: var(--gray) 1px solid;
+  padding-bottom: 10px;
+}
+
+.sidebar-section .sports-list a{
+  font-size: 20px;
+}
+
+.sidebar-section .sports-list li{
+  padding-top: 10px;
+  border-bottom: var(--gray) 1px solid;
+  padding-bottom: 10px;
+}
+
+.sidebar-section .categories-list a{
+  font-size: 20px;
+}
+
+.sidebar-section .categories-list li{
+  padding-top: 10px;
+  border-bottom: var(--gray) 1px solid;
+  padding-bottom: 10px;
+}
+
 .sidebar-section li {
   margin-bottom: 5px;
 }
 .sidebar-section a {
-  font-size: 15px;
+  font-size: 18px;
   text-decoration: none;
   color: var(--highlight-text);
 }
