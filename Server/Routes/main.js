@@ -570,6 +570,42 @@ router.post('/post/:id/dislike', authMiddleware, async (req, res) => {
 
 
 
+/**
+ * Admin Dashboard
+ * GET /dashboard
+ */
+router.get('/dashboard', authMiddleware,  async (req, res) => {
+  const token = req.cookies.token;
+  try {
+  
+    const decoded = jwt.verify(token, jwtSecret);
+    req.userId = decoded.userId;
+
+    const user = await User.findById(req.userId);
+
+    const Role = user.role;
+    console.log(Role)
+    const locals = {
+      title: 'Dashboard',
+      description: 'Simple Blog created with NodeJs, Express & MongoDb.'
+    };
+
+    const data = await Post.find();
+    res.render('admin/dashboard', {
+      locals,
+      data,
+      currentRoute: '/dashboard',
+      layout: adminLayout,
+      Role: Role,
+      user: user
+    });
+
+  } catch (error) {
+    console.log(error);
+    res.status(500).send('Server Error');
+  }
+});
+
 
 
 

@@ -15,7 +15,7 @@
     <h3>Sign In</h3>
     <a href="/register" class="<%= isActiveRoute('/register', currentRoute) %>">No Account? Register Here</a>
     <br><br>
-    <form action="/log-in" method="POST">
+    <form  id="loginForm" action="/log-in" method="POST">
       <label for="username"><b>Username</b></label>
       <input type="text" placeholder="Enter Username" name="username">
 
@@ -27,3 +27,35 @@
   </div>
  
 <% } %>
+<script>
+  document.getElementById('loginForm').addEventListener('submit', async function(event) {
+    event.preventDefault(); // Prevent default form submission
+
+    const formData = new FormData(this);
+    const data = {
+      username: formData.get('username'),
+      password: formData.get('password')
+    };
+
+    try {
+      const response = await fetch('/log-in', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(data),
+      });
+
+      if (response.status === 401) {
+        const result = await response.json();
+        alert(result.message);
+      } else if (response.ok) {
+        window.location.href = '/';
+      } else {
+        alert('An error occurred. Please try again.');
+      }
+    } catch (error) {
+      alert('Server error. Please try again later.');
+    }
+  });
+</script>

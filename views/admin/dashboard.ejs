@@ -1,16 +1,23 @@
 <div class="admin-title">
-  <% if (isAdmin) { %>
+  <% if (Role === 'admin') { %>
     <h2>Posts</h2>
     <a href="/add-post" class="button">+ Add New</a>
   <% } else { %>
-    <h2>User Information</h2>
-    <p>Welcome, <%= user %>! Here’s your information:</p>
-    <!-- Display user info -->
+    <div class="user-profile">
+      <h2>User Information</h2><br>
+      <p>Welcome, <%= user.username %>! Here’s your information:</p>
+      <ul>
+        <li><%= user.username %></li>
+        <li><%= user.role %></li>
+      </ul>
+    </div>
+    
+    
 
   <% } %>
 </div>
 
-<% if (isAdmin) { %>
+<% if (Role === 'admin') { %>
   <ul class="admin-posts">
     <% data.forEach(post => { %>
       <li>

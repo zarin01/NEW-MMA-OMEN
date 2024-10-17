@@ -44,36 +44,6 @@ const authMiddleware = async (req, res, next) => {
   }
 };
 
-/**
- * Admin Dashboard
- * GET /dashboard
- */
-router.get('/dashboard', async (req, res) => {
-  try {
-    const user = await User.findById(req.userId);
-
-    const locals = {
-      title: 'Dashboard',
-      description: 'Simple Blog created with NodeJs, Express & MongoDb.'
-    };
-
-    const isAdmin = req.user && req.user.role === 'admin'; 
-
-    const data = await Post.find();
-    res.render('admin/dashboard', {
-      locals,
-      data,
-      currentRoute: '/dashboard',
-      layout: adminLayout,
-      isAdmin: authMiddleware,
-      user: user
-    });
-
-  } catch (error) {
-    console.log(error);
-    res.status(500).send('Server Error');
-  }
-});
 
 
 
