@@ -78,8 +78,9 @@
         <ul class="article-ul">
             <% latestPosts.forEach(post => { %>
                 <li class="article-item">
-                  <a href="/post/<%= post.slug %>"></a>
+                  
                     <img src="<%= post.headerImage %>" alt="<%= post.title %>" class="article-image" />
+                    <a href="/post/<%= post.slug %>">
                     <div class="article-details">
                             <h3><%= post.title %></h3>
                         <span class="article-list__date"><%= post.createdAt.toDateString() %> | </span>

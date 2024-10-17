@@ -440,13 +440,6 @@ img {
   margin: 8px 0;
 }
 
-@media only screen and (min-width: 768px) {
-  .article-ul li a {
-    flex-direction: row;
-    align-items: center;
-  }
-
-}
 
 .article-ul li {
   font-size: 24px;

@@ -642,7 +642,7 @@ router.get('/league/:league', async (req, res) => {
   try {
     const posts = await Post.find({ league: league });
 
-    res.render('league', {
+    res.render('leagues', {
       posts,
       league,
       currentRoute: '/sports/:league',
