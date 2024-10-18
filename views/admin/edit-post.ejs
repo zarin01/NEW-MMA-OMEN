@@ -17,6 +17,10 @@
 
   <label for="headerImage"><b>Header Image</b></label>
   <input type="file" name="headerImage">
+
+  <label for="Image Alt"><b>Title</b></label>
+  <input type="text" placeholder="Image Alt Tag" name="imageAlt" required>
+
   <% if (data.headerImage) { %>
     <img src="<%= data.headerImage %>" alt="Header Image" style="max-width: 200px; height: auto;">
   <% } %>
@@ -46,21 +50,21 @@
   <!-- Promotions (checkbox group) -->
   <p><b>Choose Promotions:</b></p>
   <div>
-    <label><input type="checkbox" name="categories" value="UFC" <%=  data.categories.includes(/UFC/) ? 'checked' : '' %> /> UFC</label>
-    <label><input type="checkbox" name="categories" value="Bellator" <%= data.categories.includes('Bellator') ? 'checked' : '' %> /> Bellator</label>
-    <label><input type="checkbox" name="categories" value="ONE Championship" <%= data.categories.includes('ONE Championship') ? 'checked' : '' %> /> ONE Championship</label>
-    <label><input type="checkbox" name="categories" value="PFL" <%= data.categories.includes('PFL') ? 'checked' : '' %> /> PFL</label>
+    <label><input type="checkbox" name="categories" value="UFC" <%=  data.leagues.includes(/UFC/) ? 'checked' : '' %> /> UFC</label>
+    <label><input type="checkbox" name="categories" value="Bellator" <%= data.leagues.includes('Bellator') ? 'checked' : '' %> /> Bellator</label>
+    <label><input type="checkbox" name="categories" value="ONE Championship" <%= data.leagues.includes('ONE Championship') ? 'checked' : '' %> /> ONE Championship</label>
+    <label><input type="checkbox" name="categories" value="PFL" <%= data.leagues.includes('PFL') ? 'checked' : '' %> /> PFL</label>
   </div>
   <br><br>
   <!-- Combat Sports (checkbox group) -->
   <p><b>Choose Combat Sports:</b></p>
   <div>
-    <label><input type="checkbox" name="categories" value="MMA" <%= data.categories.includes('MMA') ? 'checked' : '' %> /> MMA</label>
-    <label><input type="checkbox" name="categories" value="Boxing" <%= data.categories.includes('Boxing') ? 'checked' : '' %> /> Boxing</label>
-    <label><input type="checkbox" name="categories" value="Kickboxing" <%= data.categories.includes('Kickboxing') ? 'checked' : '' %> /> Kickboxing</label>
-    <label><input type="checkbox" name="categories" value="Muay Thai" <%= data.categories.includes('Muay Thai') ? 'checked' : '' %> /> Muay Thai</label>
-    <label><input type="checkbox" name="categories" value="Wrestling" <%= data.categories.includes('Wrestling') ? 'checked' : '' %> /> Wrestling</label>
-    <label><input type="checkbox" name="categories" value="Jiu-Jitsu" <%= data.categories.includes('Jiu-Jitsu') ? 'checked' : '' %> /> Jiu-Jitsu</label>
+    <label><input type="checkbox" name="categories" value="MMA" <%= data.sports.includes('MMA') ? 'checked' : '' %> /> MMA</label>
+    <label><input type="checkbox" name="categories" value="Boxing" <%= data.sports.includes('Boxing') ? 'checked' : '' %> /> Boxing</label>
+    <label><input type="checkbox" name="categories" value="Kickboxing" <%= data.sports.includes('Kickboxing') ? 'checked' : '' %> /> Kickboxing</label>
+    <label><input type="checkbox" name="categories" value="Muay Thai" <%= data.sports.includes('Muay Thai') ? 'checked' : '' %> /> Muay Thai</label>
+    <label><input type="checkbox" name="categories" value="Wrestling" <%= data.sports.includes('Wrestling') ? 'checked' : '' %> /> Wrestling</label>
+    <label><input type="checkbox" name="categories" value="Jiu-Jitsu" <%= data.sports.includes('Jiu-Jitsu') ? 'checked' : '' %> /> Jiu-Jitsu</label>
   </div>
   <br><br>
   <label>

@@ -574,17 +574,20 @@ router.post('/post/:id/dislike', authMiddleware, async (req, res) => {
  * Admin Dashboard
  * GET /dashboard
  */
-router.get('/dashboard', authMiddleware,  async (req, res) => {
+router.get('/dashboard', authMiddleware, async (req, res) => {
   const token = req.cookies.token;
+
+  if (!token) {
+    return res.redirect('/log-in');
+  }
+
   try {
-  
     const decoded = jwt.verify(token, jwtSecret);
     req.userId = decoded.userId;
 
     const user = await User.findById(req.userId);
-
     const Role = user.role;
-    console.log(Role)
+
     const locals = {
       title: 'Dashboard',
       description: 'Simple Blog created with NodeJs, Express & MongoDb.'
@@ -596,8 +599,8 @@ router.get('/dashboard', authMiddleware,  async (req, res) => {
       data,
       currentRoute: '/dashboard',
       layout: adminLayout,
-      Role: Role,
-      user: user
+      Role,
+      user
     });
 
   } catch (error) {
@@ -605,6 +608,7 @@ router.get('/dashboard', authMiddleware,  async (req, res) => {
     res.status(500).send('Server Error');
   }
 });
+
 
 
 

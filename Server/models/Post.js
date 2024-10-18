@@ -19,14 +19,17 @@ const PostSchema = new Schema({
     type: String,
     required: true
   },
-  categories: [{
+  sports: [{
+    type: String
+  }],
+  leagues: [{
     type: String
   }],
   headerImage: {
     type: String,
     required: true
   },
-  ImageAlt: {
+  imageAlt: {
     type: String,
     required: true
   },

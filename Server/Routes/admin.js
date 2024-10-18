@@ -124,30 +124,29 @@ app.use((err, req, res, next) => {
 
 router.post('/add-post', upload.single('headerImage'), async (req, res) => {
   try {
-    const { title, body, author, categories, isFeatured } = req.body;
+    const { title, body, author, sports, leagues, isFeatured, metaTitle, metaDescription, keywords, imageAlt } = req.body;
     const headerImage = req.file ? req.file.location : null;
     const slugify = require('slugify');
 
-    const postTitle = title;
-    const slug = slugify(postTitle, { lower: true, strict: true });
-
-    const categoriesArray = Array.isArray(categories) ? categories : [categories];
-    const categoriesString = categoriesArray.join(', ');
+    const slug = slugify(title, { lower: true, strict: true });
+    const keywordsArray = keywords ? keywords.split(',').map(k => k.trim()) : [];
 
     const newPost = new Post({
       title,
-      slug: slug,
+      slug,
       body,
       author,
-      categories: categoriesString,
+      sports: Array.isArray(sports) ? sports : [sports],
+      leagues: Array.isArray(leagues) ? leagues : [leagues],
       headerImage,
+      imageAlt,
       isFeatured: isFeatured === 'true',
-      createdAt: new Date(),
-      updatedAt: new Date(),
       metaTitle,
       metaDescription,
-      keywords: keywords.split(',').map(k => k.trim()),
-      ogImage: req.file ? req.file.path : null
+      keywords: keywordsArray,
+      ogImage: req.file ? req.file.location : headerImage,
+      createdAt: new Date(),
+      updatedAt: new Date(),
     });
 
     await newPost.save();
@@ -161,35 +160,49 @@ router.post('/add-post', upload.single('headerImage'), async (req, res) => {
 
 
 
+
 /**
  * Admin - Edit Post
  * GET /edit-post/:slug
  */
-router.get('/edit-post/:slug', authMiddleware, async (req, res) => {
+router.put('/edit-post/:slug', authMiddleware, upload.single('headerImage'), async (req, res) => {
   try {
-    const locals = {
-      title: 'Edit Post',
-      description: 'Simple Blog created with NodeJs, Express & MongoDb.'
+    const { title, body, sports, leagues, isFeatured, metaTitle, metaDescription, keywords, imageAlt } = req.body;
+    const headerImage = req.file ? req.file.location : null;
+
+    const keywordsArray = keywords ? keywords.split(',').map(k => k.trim()) : [];
+
+    const updateData = {
+      title,
+      body,
+      sports: Array.isArray(sports) ? sports : [sports],
+      leagues: Array.isArray(leagues) ? leagues : [leagues],
+      isFeatured: isFeatured === 'true',
+      metaTitle,
+      metaDescription,
+      keywords: keywordsArray,
+      imageAlt,
+      updatedAt: Date.now(),
+      ogImage: req.file ? req.file.location : undefined,
     };
 
-    const data = await Post.findOne({ slug: req.params.slug });
+    if (headerImage) {
+      updateData.headerImage = headerImage;
+    }
 
-    if (!data) {
+    const post = await Post.findOneAndUpdate({ slug: req.params.slug }, updateData, { new: true });
+
+    if (!post) {
       return res.status(404).send('Post not found');
     }
 
-    res.render('admin/edit-post', {
-      locals,
-      data,
-      currentRoute: `/edit-post/${req.params.slug}`,
-      layout: adminLayout,
-      
-    });
+    res.redirect(`/edit-post/${post.slug}?success=true`);
   } catch (error) {
     console.error(error);
     res.status(500).send('Server Error');
   }
 });
+
 
 
 
@@ -199,23 +212,23 @@ router.get('/edit-post/:slug', authMiddleware, async (req, res) => {
  */
 router.put('/edit-post/:slug', authMiddleware, upload.single('headerImage'), async (req, res) => {
   try {
-    const { title, body, categories, isFeatured, metaTitle, metaDescription, keywords, ogImage  } = req.body;
-
-    const categoriesArray = Array.isArray(categories) ? categories : [categories];
-    const categoriesString = categoriesArray.join(', ');
-
+    const { title, body, sports, leagues, isFeatured, metaTitle, metaDescription, keywords, imageAlt } = req.body;
     const headerImage = req.file ? req.file.location : null;
 
+    const keywordsArray = keywords ? keywords.split(',').map(k => k.trim()) : [];
+    
     const updateData = {
       title,
       body,
-      categories: categoriesString,
+      sports: Array.isArray(sports) ? sports : [sports],
+      leagues: Array.isArray(leagues) ? leagues : [leagues],
       isFeatured: isFeatured === 'true',
-      updatedAt: Date.now(),
       metaTitle,
       metaDescription,
-      keywords: keywords.split(',').map(k => k.trim()),
-      ogImage: req.file ? req.file.path : undefined
+      keywords: keywordsArray,
+      imageAlt,
+      updatedAt: Date.now(),
+      ogImage: req.file ? req.file.location : undefined,
     };
 
     if (headerImage) {
